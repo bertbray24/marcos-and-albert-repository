@@ -190,3 +190,5 @@ let player2 = sprites.create(img`
     `, SpriteKind.Player)
 controller.player2.moveSprite(player2)
 controller.player1.moveSprite(player1)
+player1.setPosition(65, 87)
+player2.setPosition(99, 87)
