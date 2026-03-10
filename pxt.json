@@ -2,7 +2,9 @@
     "name": "Marcos and Albert repository - Copy",
     "description": "",
     "dependencies": {
-        "device": "*"
+        "device": "*",
+        "darts": "*",
+        "multiplayer": "*"
     },
     "files": [
         "main.blocks",
