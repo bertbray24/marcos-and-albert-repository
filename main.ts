@@ -92,7 +92,11 @@ function Set_up () {
     Ball.setPosition(80, 87)
 }
 function Jump_Ball () {
-	
+    Ball.setVelocity(0, -100)
+    pause(500)
+    Ball.setVelocity(0, 100)
+    pause(500)
+    Ball.setVelocity(0, 0)
 }
 let player2: Sprite = null
 let player1: Sprite = null
@@ -220,3 +224,4 @@ scene.setBackgroundImage(img`
     ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     `)
 Set_up()
+Jump_Ball()
