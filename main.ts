@@ -90,6 +90,40 @@ function Set_up () {
     player1.setPosition(60, 87)
     player2.setPosition(99, 87)
     Ball.setPosition(80, 87)
+    Dribble_step = 0
+    dribble_Timer = 0
+    Player2jump = false
+    Player1jump = false
+    Green_zone_min = 35
+    Green_zone_max = 65
+    Marker_Direction = 1
+    Marker_position = 0
+    Shooting = false
+    Ball_holder = 0
+    Player2Score = 0
+    Player1score = 0
+    Dribble = [
+    2,
+    5,
+    9,
+    14,
+    9,
+    5,
+    2,
+    0
+    ]
+    Game_messages = [
+    " Swish!",
+    " Scores!",
+    " Blocked!",
+    " Miss!",
+    " Wins!",
+    " 3!!"
+    ]
+    Player_Names = [" Player 1", " Player 2"]
+    Hoop_x = [8, 152]
+    info.player1.setScore(0)
+    info.player2.setScore(0)
 }
 function Jump_Ball () {
     Ball.setVelocity(0, -100)
@@ -98,6 +132,22 @@ function Jump_Ball () {
     pause(500)
     Ball.setVelocity(0, 0)
 }
+let Hoop_x: number[] = []
+let Player_Names: string[] = []
+let Game_messages: string[] = []
+let Dribble: number[] = []
+let Player1score = 0
+let Player2Score = 0
+let Ball_holder = 0
+let Shooting = false
+let Marker_position = 0
+let Marker_Direction = 0
+let Green_zone_max = 0
+let Green_zone_min = 0
+let Player1jump = false
+let Player2jump = false
+let dribble_Timer = 0
+let Dribble_step = 0
 let player2: Sprite = null
 let player1: Sprite = null
 let Ball: Sprite = null
