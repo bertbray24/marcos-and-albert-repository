@@ -136,7 +136,22 @@ function Set_up () {
     tiles.setCurrentTilemap(tilemap`level1`)
     player1.setStayInScreen(true)
     player2.setStayInScreen(true)
+    Green_Bar2()
 }
+controller.player2.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Pressed, function () {
+    if (Player2jump == false) {
+        Player2jump = true
+        player1.vy = -100
+        if (Distance(player2, Ball) < 22 && Ball_holder == 1) {
+            Ball.setVelocity(randint(-70, 70), randint(-90, -40))
+            Ball_holder = 0
+            Shooting = false
+            Green_Bar.setFlag(SpriteFlag.Invisible, true)
+            Marker.setFlag(SpriteFlag.Invisible, true)
+            game.showLongText(Game_messages[2], DialogLayout.Bottom)
+        }
+    }
+})
 function Award_Points (playernum: number, points: number) {
     if (playernum == 1) {
         Player1score = Player1score + points
@@ -147,6 +162,28 @@ function Award_Points (playernum: number, points: number) {
     }
     music.play(music.melodyPlayable(music.powerUp), music.PlaybackMode.UntilDone)
 }
+controller.player2.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Pressed, function () {
+    if (Ball_holder == 2 && Shooting == false) {
+        Shooting = true
+        Marker_position = 0
+        Marker_Direction = 1
+        Green_Bar.setFlag(SpriteFlag.Invisible, false)
+        Marker.setFlag(SpriteFlag.Invisible, false)
+    } else if (Ball_holder == 2 && Shooting == true) {
+        Launch_Shot(2)
+        Green_Bar.setFlag(SpriteFlag.Invisible, true)
+        Marker.setFlag(SpriteFlag.Invisible, true)
+        if (Marker_position >= Green_zone_min && Marker_position <= Green_zone_max) {
+            game.showLongText(Game_messages[0], DialogLayout.Bottom)
+        } else {
+            game.showLongText(Game_messages[3], DialogLayout.Bottom)
+        }
+    } else if (Ball_holder == 0) {
+        if (Distance(player2, Ball) < 25) {
+            Ball_holder = 2
+        }
+    }
+})
 function Green_Bar2 () {
     Green_Bar = sprites.create(img`
         ................................................................
@@ -234,6 +271,8 @@ function Green_Bar2 () {
         `, SpriteKind.Player)
     Green_Bar.setFlag(SpriteFlag.Invisible, true)
     Marker.setFlag(SpriteFlag.Invisible, true)
+    Green_Bar.setPosition(80, 110)
+    Marker.setPosition(57, 103)
 }
 function Distance (spriteA: Sprite, SpriteB: Sprite) {
     dx = spriteA.x - SpriteB.x
@@ -270,6 +309,15 @@ function CalculatePoints (PlayerNum: number) {
         return 1
     }
 }
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, otherSprite) {
+    if (Ball_holder == 0 && (Math.abs(Ball.vx) < 15 && Math.abs(Ball.vy) < 15)) {
+        if (sprite == player1) {
+            Ball_holder = 1
+        } else if (sprite == player2) {
+            Ball_holder = 2
+        }
+    }
+})
 function Launch_Shot (PlayerNum: number) {
     if (Marker_position >= Green_zone_min && Marker_position <= Green_zone_max) {
         if (PlayerNum == 1) {
@@ -279,9 +327,9 @@ function Launch_Shot (PlayerNum: number) {
         }
     } else {
         if (PlayerNum == 1) {
-            Ball.setVelocity(60 + randint(-40, 40), -60)
+            Ball.setVelocity(60 + randint(-40, 40), -100)
         } else {
-            Ball.setVelocity(60 + randint(-40, 40), -60)
+            Ball.setVelocity(-60 + randint(-40, 40), -100)
         }
     }
     Ball_holder = 0
@@ -316,6 +364,20 @@ function Jump_Ball () {
     pause(500)
     Ball.setVelocity(0, 0)
 }
+controller.player1.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Pressed, function () {
+    if (Player1jump == false) {
+        Player1jump = true
+        player1.vy = -100
+        if (Distance(player1, Ball) < 22 && Ball_holder == 2) {
+            Ball.setVelocity(randint(-70, 70), randint(-90, -40))
+            Ball_holder = 0
+            Shooting = false
+            Green_Bar.setFlag(SpriteFlag.Invisible, true)
+            Marker.setFlag(SpriteFlag.Invisible, true)
+            game.showLongText(Game_messages[2], DialogLayout.Bottom)
+        }
+    }
+})
 let dy = 0
 let dx = 0
 let Marker: Sprite = null
@@ -467,3 +529,86 @@ scene.setBackgroundImage(img`
     `)
 Set_up()
 Jump_Ball()
+game.onUpdate(function () {
+    if (Shooting == true) {
+        Marker_position = Marker_position + Marker_Direction * 2
+        if (Marker_position >= 100) {
+            Marker_position = 100
+            Marker_Direction = -1
+        }
+        if (Marker_position <= 0) {
+            Marker_position = 0
+            Marker_Direction = 1
+        }
+        Marker.x = 57 + Marker_position * 45 / 100
+    }
+    if (Ball_holder == 1 || Ball_holder == 2) {
+        dribble_Timer = dribble_Timer + 1
+        if (dribble_Timer >= 4) {
+            dribble_Timer = 0
+            Dribble_step = (Dribble_step + 1) % 8
+        }
+        Bounce_Offset = Dribble[Dribble_step]
+        if (Ball_holder == 1) {
+            Ball.setPosition(player1.x + 1, player1.y + Bounce_Offset)
+        } else {
+            Ball.setPosition(player2.x + 1, player2.y + Bounce_Offset)
+        }
+        Ball.setVelocity(0, 0)
+    }
+    if (Ball_holder == 0) {
+        Ball.vy = Ball.vy + 3
+        if (Ball.y > 96) {
+            Ball.y = 96
+            Ball.vy = Ball.vy * -0.45
+            Ball.vx = Ball.vx * 0.75
+        }
+        if (Ball.x < 8) {
+            Ball.x = 8
+            Ball.vx = Math.abs(Ball.vx)
+        }
+        if (Ball.x > 152) {
+            Ball.x = 152
+            Ball.vx = Math.abs(Ball.vx) * -1
+        }
+    }
+    if (Ball.x > 147 && (Ball.y > 59 && (Ball.y < 72 && (Ball_holder == 0 && Ball.vx > 0)))) {
+        PTS = CalculatePoints(1)
+        Award_Points(1, PTS)
+        if (PTS == 2) {
+            game.showLongText("3-POINTER!", DialogLayout.Bottom)
+        } else {
+            game.showLongText("Scores!", DialogLayout.Bottom)
+        }
+        pause(1200)
+        Reset_Ball()
+        Jump_Ball()
+    }
+    if (Ball.x < 13 && (Ball.y > 59 && (Ball.y < 72 && (Ball_holder == 0 && Ball.vx < 0)))) {
+        PTS = CalculatePoints(2)
+        Award_Points(2, PTS)
+        if (PTS == 2) {
+            game.showLongText("3-POINTER!", DialogLayout.Bottom)
+        } else {
+            game.showLongText("Scores!", DialogLayout.Bottom)
+        }
+        pause(1200)
+        Reset_Ball()
+        Jump_Ball()
+    }
+    if (Player1jump == true && player1.y >= 87) {
+        player1.y = 87
+        player1.vy = 0
+        Player1jump = false
+    }
+    if (Player2jump == true && player2.y >= 87) {
+        player2.y = 87
+        player2.vy = 0
+        Player2jump = false
+    }
+    Winner = Check_Winner()
+    if (Winner != 0) {
+        game.showLongText("" + Player_Names[Winner - 1] + " WINS!!", DialogLayout.Bottom)
+        game.gameOver(true)
+    }
+})
