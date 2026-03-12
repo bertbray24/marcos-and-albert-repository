@@ -273,6 +273,46 @@ function Green_Bar2 () {
     Marker.setFlag(SpriteFlag.Invisible, true)
     Green_Bar.setPosition(80, 110)
     Marker.setPosition(57, 103)
+    Hoop_Right = sprites.create(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . 1 . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `, SpriteKind.UI)
+    Hoop_Right.setPosition(143, 68)
+    Hoop_Right.setFlag(SpriteFlag.Invisible, true)
+    Hoop_Left = sprites.create(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . 1 . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `, SpriteKind.UI)
+    Hoop_Left.setPosition(17, 68)
+    Hoop_Left.setFlag(SpriteFlag.Invisible, true)
 }
 function Distance (spriteA: Sprite, SpriteB: Sprite) {
     dx = spriteA.x - SpriteB.x
@@ -288,6 +328,32 @@ function Check_Winner () {
         return 0
     }
 }
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.UI, function (sprite, otherSprite) {
+    if (otherSprite == Hoop_Right && Ball_holder == 0) {
+        PTS = CalculatePoints(1)
+        Award_Points(1, PTS)
+        if (PTS == 2) {
+            game.showLongText("3-POINTER!!", DialogLayout.Bottom)
+        } else {
+            game.showLongText("Scores!!!", DialogLayout.Bottom)
+        }
+        pause(1200)
+        Reset_Ball()
+        Jump_Ball()
+    }
+    if (otherSprite == Hoop_Left && Ball_holder == 0) {
+        PTS = CalculatePoints(2)
+        Award_Points(2, PTS)
+        if (PTS == 2) {
+            game.showLongText("3-POINTER!!", DialogLayout.Bottom)
+        } else {
+            game.showLongText("Scores!!!", DialogLayout.Bottom)
+        }
+        pause(1200)
+        Reset_Ball()
+        Jump_Ball()
+    }
+})
 function Reset_Ball () {
     Ball.setPosition(80, 87)
     Ball.setVelocity(0, 0)
@@ -296,6 +362,7 @@ function Reset_Ball () {
     Marker_position = 0
     Green_Bar.setFlag(SpriteFlag.Invisible, true)
     Marker.setFlag(SpriteFlag.Invisible, true)
+    Ball.unfollow()
 }
 function CalculatePoints (PlayerNum: number) {
     if (PlayerNum == 1) {
@@ -321,9 +388,11 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, ot
 function Launch_Shot (PlayerNum: number) {
     if (Marker_position >= Green_zone_min && Marker_position <= Green_zone_max) {
         if (PlayerNum == 1) {
-            Ball.setVelocity(60, -120)
+            Ball.setVelocity(65, -110)
+            Ball.follow(Hoop_Right, 100)
         } else {
-            Ball.setVelocity(-60, -120)
+            Ball.setVelocity(-65, -110)
+            Ball.follow(Hoop_Left, 100)
         }
     } else {
         if (PlayerNum == 1) {
@@ -380,6 +449,8 @@ controller.player1.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Press
 })
 let dy = 0
 let dx = 0
+let Hoop_Left: Sprite = null
+let Hoop_Right: Sprite = null
 let Marker: Sprite = null
 let Green_Bar: Sprite = null
 let Hoop_x: number[] = []
@@ -571,30 +642,6 @@ game.onUpdate(function () {
             Ball.x = 152
             Ball.vx = Math.abs(Ball.vx) * -1
         }
-    }
-    if (Ball.x > 147 && (Ball.y > 59 && (Ball.y < 72 && (Ball_holder == 0 && Ball.vx > 0)))) {
-        PTS = CalculatePoints(1)
-        Award_Points(1, PTS)
-        if (PTS == 2) {
-            game.showLongText("3-POINTER!", DialogLayout.Bottom)
-        } else {
-            game.showLongText("Scores!", DialogLayout.Bottom)
-        }
-        pause(1200)
-        Reset_Ball()
-        Jump_Ball()
-    }
-    if (Ball.x < 13 && (Ball.y > 59 && (Ball.y < 72 && (Ball_holder == 0 && Ball.vx < 0)))) {
-        PTS = CalculatePoints(2)
-        Award_Points(2, PTS)
-        if (PTS == 2) {
-            game.showLongText("3-POINTER!", DialogLayout.Bottom)
-        } else {
-            game.showLongText("Scores!", DialogLayout.Bottom)
-        }
-        pause(1200)
-        Reset_Ball()
-        Jump_Ball()
     }
     if (Player1jump == true && player1.y >= 87) {
         player1.y = 87
