@@ -1,3 +1,6 @@
+scene.onHitWall(SpriteKind.Player, function (sprite, location) {
+	
+})
 scene.setBackgroundImage(img`
     cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
     cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -190,3 +193,5 @@ let player2 = sprites.create(img`
     `, SpriteKind.Player)
 controller.player2.moveSprite(player2)
 controller.player1.moveSprite(player1)
+tiles.setCurrentTilemap(tilemap`level1`)
+tiles.setWallAt(tiles.getTileLocation(0, 55), true)
