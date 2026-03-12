@@ -1,3 +1,6 @@
+namespace SpriteKind {
+    export const UI = SpriteKind.create()
+}
 function Set_up () {
     Ball = sprites.create(img`
         . . . . f f f f f f . . . . . . 
@@ -90,6 +93,10 @@ function Set_up () {
     player1.setPosition(60, 87)
     player2.setPosition(99, 87)
     Ball.setPosition(80, 87)
+    Bounce_Offset = 0
+    Winner = 0
+    PTS = 0
+    distance = 0
     Dribble_step = 0
     dribble_Timer = 0
     Player2jump = false
@@ -124,7 +131,184 @@ function Set_up () {
     Hoop_x = [8, 152]
     info.player1.setScore(0)
     info.player2.setScore(0)
+    player1.ay = 250
+    player2.ay = 250
+    tiles.setCurrentTilemap(tilemap`level1`)
+    player1.setStayInScreen(true)
+    player2.setStayInScreen(true)
 }
+function Award_Points (playernum: number, points: number) {
+    if (playernum == 1) {
+        Player1score = Player1score + points
+        info.player1.setScore(Player1score)
+    } else {
+        Player2Score = Player2Score + points
+        info.player2.setScore(Player1score)
+    }
+    music.play(music.melodyPlayable(music.powerUp), music.PlaybackMode.UntilDone)
+}
+function Green_Bar2 () {
+    Green_Bar = sprites.create(img`
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        .ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff.
+        .fdddddddddddddddddddddd77777777777777ddddddddddddddddddddddddf.
+        .fdddddddddddddddddddddd77777777777777ddddddddddddddddddddddddf.
+        .fdddddddddddddddddddddd77777777777777ddddddddddddddddddddddddf.
+        .fdddddddddddddddddddddd77777777777777ddddddddddddddddddddddddf.
+        .fdddddddddddddddddddddd77777777777777ddddddddddddddddddddddddf.
+        .ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff.
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        `, SpriteKind.UI)
+    Marker = sprites.create(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . f f f f f f f f f f . . 
+        . . . . f f f f f f f f f f . . 
+        . . . . f f f f f f f f f f . . 
+        . . . . f f f f f f f f f f . . 
+        . . . . f f f f f f f f f f . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `, SpriteKind.Player)
+    Green_Bar.setFlag(SpriteFlag.Invisible, true)
+    Marker.setFlag(SpriteFlag.Invisible, true)
+}
+function Distance (spriteA: Sprite, SpriteB: Sprite) {
+    dx = spriteA.x - SpriteB.x
+    dy = spriteA.y - SpriteB.y
+    return Math.sqrt(dx * dx + dy * dy)
+}
+function Check_Winner () {
+    if (Player1score >= 11) {
+        return 1
+    } else if (Player2Score >= 11) {
+        return 2
+    } else {
+        return 0
+    }
+}
+function Reset_Ball () {
+    Ball.setPosition(80, 87)
+    Ball.setVelocity(0, 0)
+    Ball_holder = 0
+    Shooting = false
+    Marker_position = 0
+    Green_Bar.setFlag(SpriteFlag.Invisible, true)
+    Marker.setFlag(SpriteFlag.Invisible, true)
+}
+function CalculatePoints (PlayerNum: number) {
+    if (PlayerNum == 1) {
+        distance = Math.abs(player1.x - 152)
+    } else if (false) {
+        distance = Math.abs(player2.x - 8)
+    }
+    if (distance > 55) {
+        return 2
+    } else {
+        return 1
+    }
+}
+function Launch_Shot (PlayerNum: number) {
+    if (Marker_position >= Green_zone_min && Marker_position <= Green_zone_max) {
+        if (PlayerNum == 1) {
+            Ball.setVelocity(60, -120)
+        } else {
+            Ball.setVelocity(-60, -120)
+        }
+    } else {
+        if (PlayerNum == 1) {
+            Ball.setVelocity(60 + randint(-40, 40), -60)
+        } else {
+            Ball.setVelocity(60 + randint(-40, 40), -60)
+        }
+    }
+    Ball_holder = 0
+    Shooting = false
+}
+controller.player1.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Pressed, function () {
+    if (Ball_holder == 1 && Shooting == false) {
+        Shooting = true
+        Marker_position = 0
+        Marker_Direction = 1
+        Green_Bar.setFlag(SpriteFlag.Invisible, false)
+        Marker.setFlag(SpriteFlag.Invisible, false)
+    } else if (Ball_holder == 1 && Shooting == true) {
+        Launch_Shot(1)
+        Green_Bar.setFlag(SpriteFlag.Invisible, true)
+        Marker.setFlag(SpriteFlag.Invisible, true)
+        if (Marker_position >= Green_zone_min && Marker_position <= Green_zone_max) {
+            game.showLongText(Game_messages[0], DialogLayout.Bottom)
+        } else {
+            game.showLongText(Game_messages[3], DialogLayout.Bottom)
+        }
+    } else if (Ball_holder == 0) {
+        if (Distance(player1, Ball) < 25) {
+            Ball_holder = 1
+        }
+    }
+})
 function Jump_Ball () {
     Ball.setVelocity(0, -100)
     pause(500)
@@ -132,6 +316,10 @@ function Jump_Ball () {
     pause(500)
     Ball.setVelocity(0, 0)
 }
+let dy = 0
+let dx = 0
+let Marker: Sprite = null
+let Green_Bar: Sprite = null
 let Hoop_x: number[] = []
 let Player_Names: string[] = []
 let Game_messages: string[] = []
@@ -148,6 +336,10 @@ let Player1jump = false
 let Player2jump = false
 let dribble_Timer = 0
 let Dribble_step = 0
+let distance = 0
+let PTS = 0
+let Winner = 0
+let Bounce_Offset = 0
 let player2: Sprite = null
 let player1: Sprite = null
 let Ball: Sprite = null
