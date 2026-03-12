@@ -141,7 +141,7 @@ function Set_up () {
 controller.player2.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Pressed, function () {
     if (Player2jump == false) {
         Player2jump = true
-        player1.vy = -100
+        player2.vy = -100
         if (Distance(player2, Ball) < 22 && Ball_holder == 1) {
             Ball.setVelocity(randint(-70, 70), randint(-90, -40))
             Ball_holder = 0
@@ -158,7 +158,7 @@ function Award_Points (playernum: number, points: number) {
         info.player1.setScore(Player1score)
     } else {
         Player2Score = Player2Score + points
-        info.player2.setScore(Player1score)
+        info.player2.setScore(Player2Score)
     }
     music.play(music.melodyPlayable(music.powerUp), music.PlaybackMode.UntilDone)
 }
@@ -300,7 +300,7 @@ function Reset_Ball () {
 function CalculatePoints (PlayerNum: number) {
     if (PlayerNum == 1) {
         distance = Math.abs(player1.x - 152)
-    } else if (false) {
+    } else if (PlayerNum == 2) {
         distance = Math.abs(player2.x - 8)
     }
     if (distance > 55) {
