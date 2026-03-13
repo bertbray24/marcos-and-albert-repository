@@ -88,11 +88,11 @@ function Set_up () {
         ................................
         ................................
         `, SpriteKind.Player)
-    controller.player2.moveSprite(player2)
-    controller.player1.moveSprite(player1)
-    player1.setPosition(60, 87)
-    player2.setPosition(99, 87)
-    Ball.setPosition(80, 87)
+    controller.player2.moveSprite(player2, 100, 0)
+    controller.player1.moveSprite(player1, 100, 0)
+    player1.setPosition(55, 90)
+    player2.setPosition(105, 90)
+    Ball.setPosition(80, 90)
     Bounce_Offset = 0
     Winner = 0
     PTS = 0
@@ -110,13 +110,13 @@ function Set_up () {
     Player2Score = 0
     Player1score = 0
     Dribble = [
-    2,
+    1,
+    3,
     5,
-    9,
-    14,
-    9,
+    7,
     5,
-    2,
+    3,
+    1,
     0
     ]
     Game_messages = [
@@ -355,7 +355,7 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.UI, function (sprite, otherS
     }
 })
 function Reset_Ball () {
-    Ball.setPosition(80, 87)
+    Ball.setPosition(80, 90)
     Ball.setVelocity(0, 0)
     Ball_holder = 0
     Shooting = false
@@ -427,10 +427,9 @@ controller.player1.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Press
     }
 })
 function Jump_Ball () {
-    Ball.setVelocity(0, -100)
-    pause(500)
-    Ball.setVelocity(0, 100)
-    pause(500)
+    Ball.setVelocity(0, -80)
+    pause(1800)
+    Ball.setPosition(80, 90)
     Ball.setVelocity(0, 0)
 }
 controller.player1.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Pressed, function () {
@@ -621,16 +620,16 @@ game.onUpdate(function () {
         }
         Bounce_Offset = Dribble[Dribble_step]
         if (Ball_holder == 1) {
-            Ball.setPosition(player1.x + 1, player1.y + Bounce_Offset)
+            Ball.setPosition(player1.x + 8, player1.y + Bounce_Offset)
         } else {
-            Ball.setPosition(player2.x + 1, player2.y + Bounce_Offset)
+            Ball.setPosition(player2.x - 8, player2.y + Bounce_Offset)
         }
         Ball.setVelocity(0, 0)
     }
     if (Ball_holder == 0) {
         Ball.vy = Ball.vy + 3
-        if (Ball.y > 96) {
-            Ball.y = 96
+        if (Ball.y > 93) {
+            Ball.y = 93
             Ball.vy = Ball.vy * -0.45
             Ball.vx = Ball.vx * 0.75
         }
@@ -643,13 +642,13 @@ game.onUpdate(function () {
             Ball.vx = Math.abs(Ball.vx) * -1
         }
     }
-    if (Player1jump == true && player1.y >= 87) {
-        player1.y = 87
+    if (Player1jump == true && player1.y >= 90) {
+        player1.y = 90
         player1.vy = 0
         Player1jump = false
     }
-    if (Player2jump == true && player2.y >= 87) {
-        player2.y = 87
+    if (Player2jump == true && player2.y >= 90) {
+        player2.y = 90
         player2.vy = 0
         Player2jump = false
     }
