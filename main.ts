@@ -1,31 +1,142 @@
 namespace SpriteKind {
     export const UI = SpriteKind.create()
 }
-function Jump_Ball () {
-    Ball.setVelocity(0, -100)
-    pause(500)
-    Ball.setVelocity(0, 100)
-    pause(500)
-    Ball.setVelocity(0, 0)
-}
-function Launch_Shot (PlayerNum: number) {
-    if (Marker_position >= Green_zone_min && Marker_position <= Green_zone_max) {
-        if (PlayerNum == 1) {
-            Ball.setVelocity(65, -110)
-            Ball.follow(Hoop_Right, 100)
-        } else {
-            Ball.setVelocity(-65, -110)
-            Ball.follow(Hoop_Left, 100)
-        }
-    } else {
-        if (PlayerNum == 1) {
-            Ball.setVelocity(60 + randint(-40, 40), -100)
-        } else {
-            Ball.setVelocity(-60 + randint(-40, 40), -100)
-        }
-    }
-    Ball_holder = 0
+function Set_up () {
+    Ball = sprites.create(img`
+        . . . . f f f f f f . . . . . . 
+        . . f f 6 6 6 f 6 6 f f . . . . 
+        . f 6 f 6 6 6 f 6 6 f 6 f . . . 
+        . f 6 6 f 6 6 f 6 f 6 6 f . . . 
+        f 6 6 6 f 6 6 f 6 f 6 6 6 f . . 
+        f 6 6 6 f 6 6 f 6 f 6 6 6 f . . 
+        f 6 6 6 f 6 6 f 6 f 6 6 6 f . . 
+        f f f f f f f f f f f f f f . . 
+        f 6 6 6 f 6 6 f 6 f 6 6 6 f . . 
+        f 6 6 6 f 6 6 f 6 f 6 6 6 f . . 
+        f 6 6 6 f 6 6 f 6 f 6 6 6 f . . 
+        . f 6 f 6 6 6 f 6 6 f 6 f . . . 
+        . f f 6 6 6 6 f 6 6 6 f f . . . 
+        . . f f f f f f f f f f . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `, SpriteKind.Projectile)
+    player1 = sprites.create(img`
+        ................ffff............
+        ................ffff............
+        ................ffff............
+        ................eeee............
+        ................eeef............
+        ................eeee............
+        ................eeed............
+        ................eeee............
+        ................eeee............
+        .................ee.............
+        ................2222............
+        ................2222............
+        ................2ee2............
+        ................2ee2............
+        ................2ee2............
+        ................2ee2............
+        ................2222............
+        ................2222............
+        ................2..2............
+        ................e..e............
+        ................2..2............
+        ................2..2............
+        ................................
+        ................................
+        ................................
+        ................................
+        ................................
+        ................................
+        ................................
+        ................................
+        ................................
+        ................................
+        `, SpriteKind.Player)
+    player2 = sprites.create(img`
+        ............ffff................
+        ............ffff................
+        ............ffff................
+        ............eeee................
+        ............feee................
+        ............eeee................
+        ............deee................
+        ............eeee................
+        .............ee.................
+        ............8888................
+        ............8888................
+        ............8888................
+        ............8ee8................
+        ............8ee8................
+        ............8ee8................
+        ............8888................
+        ............8888................
+        ............8..8................
+        ............e..e................
+        ............8..8................
+        ............8..8................
+        ................................
+        ................................
+        ................................
+        ................................
+        ................................
+        ................................
+        ................................
+        ................................
+        ................................
+        ................................
+        ................................
+        `, SpriteKind.Player)
+    controller.player2.moveSprite(player2, 100, 0)
+    controller.player1.moveSprite(player1, 100, 0)
+    player1.setPosition(55, 90)
+    player2.setPosition(105, 90)
+    Ball.setPosition(80, 90)
+    Bounce_Offset = 0
+    Winner = 0
+    PTS = 0
+    distance = 0
+    Dribble_step = 0
+    dribble_Timer = 0
+    Player2jump = false
+    Player1jump = false
+    Green_zone_min = 35
+    Green_zone_max = 65
+    Marker_Direction = 1
+    Marker_position = 0
     Shooting = false
+    Ball_holder = 0
+    Player2Score = 0
+    Player1score = 0
+    Dribble = [
+    1,
+    3,
+    5,
+    7,
+    5,
+    3,
+    1,
+    0
+    ]
+    Game_messages = [
+    " Swish!",
+    " Scores!",
+    " Blocked!",
+    " Miss!",
+    " Wins!",
+    " 3!!"
+    ]
+    Player_Names = [" Player 1", " Player 2"]
+    Hoop_x = [8, 152]
+    info.player1.setScore(0)
+    info.player2.setScore(0)
+    player1.ay = 250
+    player2.ay = 250
+    tiles.setCurrentTilemap(tilemap`level1`)
+    player1.setStayInScreen(true)
+    player2.setStayInScreen(true)
+    Green_Bar2()
 }
 controller.player2.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Pressed, function () {
     if (Player2jump == false) {
@@ -51,15 +162,6 @@ function Award_Points (playernum: number, points: number) {
     }
     music.play(music.melodyPlayable(music.powerUp), music.PlaybackMode.UntilDone)
 }
-function Check_Winner () {
-    if (Player1score >= 11) {
-        return 1
-    } else if (Player2Score >= 11) {
-        return 2
-    } else {
-        return 0
-    }
-}
 controller.player2.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Pressed, function () {
     if (Ball_holder == 2 && Shooting == false) {
         Shooting = true
@@ -78,58 +180,6 @@ controller.player2.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Press
         }
     } else if (Ball_holder == 0) {
         if (Distance(player2, Ball) < 25) {
-            Ball_holder = 2
-        }
-    }
-})
-function Distance (spriteA: Sprite, SpriteB: Sprite) {
-    dx = spriteA.x - SpriteB.x
-    dy = spriteA.y - SpriteB.y
-    return Math.sqrt(dx * dx + dy * dy)
-}
-sprites.onOverlap(SpriteKind.Projectile, SpriteKind.UI, function (sprite, otherSprite) {
-    if (otherSprite == Hoop_Right && Ball_holder == 0) {
-        PTS = CalculatePoints(1)
-        Award_Points(1, PTS)
-        if (PTS == 2) {
-            game.showLongText("3-POINTER!!", DialogLayout.Bottom)
-        } else {
-            game.showLongText("Scores!!!", DialogLayout.Bottom)
-        }
-        pause(1200)
-        Reset_Ball()
-        Jump_Ball()
-    }
-    if (otherSprite == Hoop_Left && Ball_holder == 0) {
-        PTS = CalculatePoints(2)
-        Award_Points(2, PTS)
-        if (PTS == 2) {
-            game.showLongText("3-POINTER!!", DialogLayout.Bottom)
-        } else {
-            game.showLongText("Scores!!!", DialogLayout.Bottom)
-        }
-        pause(1200)
-        Reset_Ball()
-        Jump_Ball()
-    }
-})
-function CalculatePoints (PlayerNum: number) {
-    if (PlayerNum == 1) {
-        distance = Math.abs(player1.x - 152)
-    } else if (PlayerNum == 2) {
-        distance = Math.abs(player2.x - 8)
-    }
-    if (distance > 55) {
-        return 2
-    } else {
-        return 1
-    }
-}
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, otherSprite) {
-    if (Ball_holder == 0 && (Math.abs(Ball.vx) < 15 && Math.abs(Ball.vy) < 15)) {
-        if (sprite == player1) {
-            Ball_holder = 1
-        } else if (sprite == player2) {
             Ball_holder = 2
         }
     }
@@ -264,6 +314,96 @@ function Green_Bar2 () {
     Hoop_Left.setPosition(17, 68)
     Hoop_Left.setFlag(SpriteFlag.Invisible, true)
 }
+function Distance (spriteA: Sprite, SpriteB: Sprite) {
+    dx = spriteA.x - SpriteB.x
+    dy = spriteA.y - SpriteB.y
+    return Math.sqrt(dx * dx + dy * dy)
+}
+function Check_Winner () {
+    if (Player1score >= 11) {
+        return 1
+    } else if (Player2Score >= 11) {
+        return 2
+    } else {
+        return 0
+    }
+}
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.UI, function (sprite, otherSprite) {
+    if (otherSprite == Hoop_Right && Ball_holder == 0) {
+        PTS = CalculatePoints(1)
+        Award_Points(1, PTS)
+        if (PTS == 2) {
+            game.showLongText("3-POINTER!!", DialogLayout.Bottom)
+        } else {
+            game.showLongText("Scores!!!", DialogLayout.Bottom)
+        }
+        pause(1200)
+        Reset_Ball()
+        Jump_Ball()
+    }
+    if (otherSprite == Hoop_Left && Ball_holder == 0) {
+        PTS = CalculatePoints(2)
+        Award_Points(2, PTS)
+        if (PTS == 2) {
+            game.showLongText("3-POINTER!!", DialogLayout.Bottom)
+        } else {
+            game.showLongText("Scores!!!", DialogLayout.Bottom)
+        }
+        pause(1200)
+        Reset_Ball()
+        Jump_Ball()
+    }
+})
+function Reset_Ball () {
+    Ball.setPosition(80, 90)
+    Ball.setVelocity(0, 0)
+    Ball_holder = 0
+    Shooting = false
+    Marker_position = 0
+    Green_Bar.setFlag(SpriteFlag.Invisible, true)
+    Marker.setFlag(SpriteFlag.Invisible, true)
+    Ball.unfollow()
+}
+function CalculatePoints (PlayerNum: number) {
+    if (PlayerNum == 1) {
+        distance = Math.abs(player1.x - 152)
+    } else if (PlayerNum == 2) {
+        distance = Math.abs(player2.x - 8)
+    }
+    if (distance > 55) {
+        return 2
+    } else {
+        return 1
+    }
+}
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, otherSprite) {
+    if (Ball_holder == 0 && (Math.abs(Ball.vx) < 15 && Math.abs(Ball.vy) < 15)) {
+        if (sprite == player1) {
+            Ball_holder = 1
+        } else if (sprite == player2) {
+            Ball_holder = 2
+        }
+    }
+})
+function Launch_Shot (PlayerNum: number) {
+    if (Marker_position >= Green_zone_min && Marker_position <= Green_zone_max) {
+        if (PlayerNum == 1) {
+            Ball.setVelocity(65, -110)
+            Ball.follow(Hoop_Right, 100)
+        } else {
+            Ball.setVelocity(-65, -110)
+            Ball.follow(Hoop_Left, 100)
+        }
+    } else {
+        if (PlayerNum == 1) {
+            Ball.setVelocity(60 + randint(-40, 40), -100)
+        } else {
+            Ball.setVelocity(-60 + randint(-40, 40), -100)
+        }
+    }
+    Ball_holder = 0
+    Shooting = false
+}
 controller.player1.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Pressed, function () {
     if (Ball_holder == 1 && Shooting == false) {
         Shooting = true
@@ -286,6 +426,12 @@ controller.player1.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Press
         }
     }
 })
+function Jump_Ball () {
+    Ball.setVelocity(0, -80)
+    pause(1800)
+    Ball.setPosition(80, 90)
+    Ball.setVelocity(0, 0)
+}
 controller.player1.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Pressed, function () {
     if (Player1jump == false) {
         Player1jump = true
@@ -300,181 +446,34 @@ controller.player1.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Press
         }
     }
 })
-function Set_up () {
-    Ball = sprites.create(img`
-        . . . . f f f f f f . . . . . . 
-        . . f f 6 6 6 f 6 6 f f . . . . 
-        . f 6 f 6 6 6 f 6 6 f 6 f . . . 
-        . f 6 6 f 6 6 f 6 f 6 6 f . . . 
-        f 6 6 6 f 6 6 f 6 f 6 6 6 f . . 
-        f 6 6 6 f 6 6 f 6 f 6 6 6 f . . 
-        f 6 6 6 f 6 6 f 6 f 6 6 6 f . . 
-        f f f f f f f f f f f f f f . . 
-        f 6 6 6 f 6 6 f 6 f 6 6 6 f . . 
-        f 6 6 6 f 6 6 f 6 f 6 6 6 f . . 
-        f 6 6 6 f 6 6 f 6 f 6 6 6 f . . 
-        . f 6 f 6 6 6 f 6 6 f 6 f . . . 
-        . f f 6 6 6 6 f 6 6 6 f f . . . 
-        . . f f f f f f f f f f . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        `, SpriteKind.Projectile)
-    player1 = sprites.create(img`
-        ................ffff............
-        ................ffff............
-        ................ffff............
-        ................eeee............
-        ................eeef............
-        ................eeee............
-        ................eeed............
-        ................eeee............
-        ................eeee............
-        .................ee.............
-        ................2222............
-        ................2222............
-        ................2ee2............
-        ................2ee2............
-        ................2ee2............
-        ................2ee2............
-        ................2222............
-        ................2222............
-        ................2..2............
-        ................e..e............
-        ................2..2............
-        ................2..2............
-        ................................
-        ................................
-        ................................
-        ................................
-        ................................
-        ................................
-        ................................
-        ................................
-        ................................
-        ................................
-        `, SpriteKind.Player)
-    player2 = sprites.create(img`
-        ............ffff................
-        ............ffff................
-        ............ffff................
-        ............eeee................
-        ............feee................
-        ............eeee................
-        ............deee................
-        ............eeee................
-        .............ee.................
-        ............8888................
-        ............8888................
-        ............8888................
-        ............8ee8................
-        ............8ee8................
-        ............8ee8................
-        ............8888................
-        ............8888................
-        ............8..8................
-        ............e..e................
-        ............8..8................
-        ............8..8................
-        ................................
-        ................................
-        ................................
-        ................................
-        ................................
-        ................................
-        ................................
-        ................................
-        ................................
-        ................................
-        ................................
-        `, SpriteKind.Player)
-    controller.player2.moveSprite(player2)
-    controller.player1.moveSprite(player1)
-    player1.setPosition(60, 87)
-    player2.setPosition(99, 87)
-    Ball.setPosition(80, 87)
-    Bounce_Offset = 0
-    Winner = 0
-    PTS = 0
-    distance = 0
-    Dribble_step = 0
-    dribble_Timer = 0
-    Player2jump = false
-    Player1jump = false
-    Green_zone_min = 35
-    Green_zone_max = 65
-    Marker_Direction = 1
-    Marker_position = 0
-    Shooting = false
-    Ball_holder = 0
-    Player2Score = 0
-    Player1score = 0
-    Dribble = [
-    2,
-    5,
-    9,
-    14,
-    9,
-    5,
-    2,
-    0
-    ]
-    Game_messages = [
-    " Swish!",
-    " Scores!",
-    " Blocked!",
-    " Miss!",
-    " Wins!",
-    " 3!!"
-    ]
-    Player_Names = [" Player 1", " Player 2"]
-    Hoop_x = [8, 152]
-    info.player1.setScore(0)
-    info.player2.setScore(0)
-    player1.ay = 250
-    player2.ay = 250
-    tiles.setCurrentTilemap(tilemap`level1`)
-    player1.setStayInScreen(true)
-    player2.setStayInScreen(true)
-    Green_Bar2()
-}
-function Reset_Ball () {
-    Ball.setPosition(80, 87)
-    Ball.setVelocity(0, 0)
-    Ball_holder = 0
-    Shooting = false
-    Marker_position = 0
-    Green_Bar.setFlag(SpriteFlag.Invisible, true)
-    Marker.setFlag(SpriteFlag.Invisible, true)
-    Ball.unfollow()
-}
-let Hoop_x: number[] = []
-let Player_Names: string[] = []
-let Dribble: number[] = []
-let dribble_Timer = 0
-let Dribble_step = 0
-let Winner = 0
-let Bounce_Offset = 0
-let Player1jump = false
-let player1: Sprite = null
-let distance = 0
-let PTS = 0
 let dy = 0
 let dx = 0
-let Marker_Direction = 0
-let Player2Score = 0
-let Player1score = 0
-let Game_messages: string[] = []
-let Marker: Sprite = null
-let Green_Bar: Sprite = null
-let player2: Sprite = null
-let Player2jump = false
-let Shooting = false
-let Ball_holder = 0
 let Hoop_Left: Sprite = null
 let Hoop_Right: Sprite = null
+let Marker: Sprite = null
+let Green_Bar: Sprite = null
+let Hoop_x: number[] = []
+let Player_Names: string[] = []
+let Game_messages: string[] = []
+let Dribble: number[] = []
+let Player1score = 0
+let Player2Score = 0
+let Ball_holder = 0
+let Shooting = false
+let Marker_position = 0
+let Marker_Direction = 0
 let Green_zone_max = 0
 let Green_zone_min = 0
-let Marker_position = 0
+let Player1jump = false
+let Player2jump = false
+let dribble_Timer = 0
+let Dribble_step = 0
+let distance = 0
+let PTS = 0
+let Winner = 0
+let Bounce_Offset = 0
+let player2: Sprite = null
+let player1: Sprite = null
 let Ball: Sprite = null
 scene.setBackgroundImage(img`
     cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -621,16 +620,16 @@ game.onUpdate(function () {
         }
         Bounce_Offset = Dribble[Dribble_step]
         if (Ball_holder == 1) {
-            Ball.setPosition(player1.x + 1, player1.y + Bounce_Offset)
+            Ball.setPosition(player1.x + 8, player1.y + Bounce_Offset)
         } else {
-            Ball.setPosition(player2.x + 1, player2.y + Bounce_Offset)
+            Ball.setPosition(player2.x - 8, player2.y + Bounce_Offset)
         }
         Ball.setVelocity(0, 0)
     }
     if (Ball_holder == 0) {
         Ball.vy = Ball.vy + 3
-        if (Ball.y > 96) {
-            Ball.y = 96
+        if (Ball.y > 93) {
+            Ball.y = 93
             Ball.vy = Ball.vy * -0.45
             Ball.vx = Ball.vx * 0.75
         }
@@ -643,13 +642,13 @@ game.onUpdate(function () {
             Ball.vx = Math.abs(Ball.vx) * -1
         }
     }
-    if (Player1jump == true && player1.y >= 87) {
-        player1.y = 87
+    if (Player1jump == true && player1.y >= 90) {
+        player1.y = 90
         player1.vy = 0
         Player1jump = false
     }
-    if (Player2jump == true && player2.y >= 87) {
-        player2.y = 87
+    if (Player2jump == true && player2.y >= 90) {
+        player2.y = 90
         player2.vy = 0
         Player2jump = false
     }
