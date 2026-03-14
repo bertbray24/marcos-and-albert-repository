@@ -185,6 +185,8 @@ controller.player2.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Press
     }
 })
 function Green_Bar2 () {
+    ball_following = false
+    shot_x = 0
     Green_Bar = sprites.create(img`
         ................................................................
         ................................................................
@@ -377,7 +379,7 @@ function CalculatePoints (PlayerNum: number) {
     }
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, otherSprite) {
-    if (Ball_holder == 0 && (Math.abs(Ball.vx) < 15 && Math.abs(Ball.vy) < 15)) {
+    if (Ball_holder == 0 && (Math.abs(Ball.vx) < 10 && Math.abs(Ball.vy) < 10)) {
         if (sprite == player1) {
             Ball_holder = 1
         } else if (sprite == player2) {
@@ -390,9 +392,11 @@ function Launch_Shot (PlayerNum: number) {
         if (PlayerNum == 1) {
             Ball.setVelocity(65, -110)
             Ball.follow(Hoop_Right, 100)
+            ball_following = true
         } else {
             Ball.setVelocity(-65, -110)
             Ball.follow(Hoop_Left, 100)
+            ball_following = true
         }
     } else {
         if (PlayerNum == 1) {
@@ -427,10 +431,12 @@ controller.player1.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Press
     }
 })
 function Jump_Ball () {
-    Ball.setVelocity(0, -80)
-    pause(1800)
-    Ball.setPosition(80, 90)
+    ball_following = true
+    Ball.setPosition(80, 40)
     Ball.setVelocity(0, 0)
+    pause(600)
+    ball_following = false
+    Ball.setVelocity(0, 50)
 }
 controller.player1.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Pressed, function () {
     if (Player1jump == false) {
@@ -450,6 +456,8 @@ let dy = 0
 let dx = 0
 let Hoop_Left: Sprite = null
 let Hoop_Right: Sprite = null
+let shot_x = 0
+let ball_following = false
 let Marker: Sprite = null
 let Green_Bar: Sprite = null
 let Hoop_x: number[] = []
@@ -597,6 +605,10 @@ scene.setBackgroundImage(img`
     44444444444444444ffff4444444444444444444444444444444444444444444444444444444444f444444444444444444444444444444444444444444444444444444444ffff4444444444444444444
     ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     `)
+game.showLongText("BASKETBALL - Same keyboard, 2 players! First to 11 wins!", DialogLayout.Center)
+game.showLongText("PLAYER 1 (RED): Arrow keys to move | Z = Pickup/Shoot | X = Jump/Block", DialogLayout.Center)
+game.showLongText("PLAYER 2 (BLUE): W A S D to move | Q = Pickup/Shoot | E = Jump/Block", DialogLayout.Center)
+game.showLongText("Stop the marker in the GREEN zone to score! Miss = random shot", DialogLayout.Center)
 Set_up()
 Jump_Ball()
 game.onUpdate(function () {
