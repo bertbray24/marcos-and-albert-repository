@@ -110,7 +110,6 @@ function Set_up () {
     Player2Score = 0
     Player1score = 0
     ball_following = false
-    ball_following = false
     shot_x = 0
     Dribble = [
     1,
