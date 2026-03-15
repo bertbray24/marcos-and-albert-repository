@@ -151,7 +151,6 @@ controller.player2.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Press
             Shooting = false
             Green_Bar.setFlag(SpriteFlag.Invisible, true)
             Marker.setFlag(SpriteFlag.Invisible, true)
-            game.showLongText(Game_messages[2], DialogLayout.Bottom)
         }
     }
 })
@@ -368,9 +367,9 @@ function Reset_Ball () {
 }
 function CalculatePoints (PlayerNum: number) {
     if (PlayerNum == 1) {
-        distance = Math.abs(player1.x - 152)
+        distance = Math.abs(shot_x - 152)
     } else if (PlayerNum == 2) {
-        distance = Math.abs(player2.x - 8)
+        distance = Math.abs(shot_x - 8)
     }
     if (distance > 55) {
         return 2
@@ -444,7 +443,6 @@ controller.player1.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Press
             Shooting = false
             Green_Bar.setFlag(SpriteFlag.Invisible, true)
             Marker.setFlag(SpriteFlag.Invisible, true)
-            game.showLongText(Game_messages[2], DialogLayout.Bottom)
         }
     }
 })
@@ -634,7 +632,7 @@ game.onUpdate(function () {
         }
         Ball.setVelocity(0, 0)
     }
-    if (Ball_holder == 0) {
+    if (Ball_holder == 0 && ball_following == false) {
         Ball.vy = Ball.vy + 3
         if (Ball.y > 93) {
             Ball.y = 93
