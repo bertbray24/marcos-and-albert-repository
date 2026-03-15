@@ -109,6 +109,9 @@ function Set_up () {
     Ball_holder = 0
     Player2Score = 0
     Player1score = 0
+    ball_following = false
+    ball_following = false
+    shot_x = 0
     Dribble = [
     1,
     3,
@@ -170,14 +173,10 @@ controller.player2.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Press
         Green_Bar.setFlag(SpriteFlag.Invisible, false)
         Marker.setFlag(SpriteFlag.Invisible, false)
     } else if (Ball_holder == 2 && Shooting == true) {
+        shot_x = player2.x
         Launch_Shot(2)
         Green_Bar.setFlag(SpriteFlag.Invisible, true)
         Marker.setFlag(SpriteFlag.Invisible, true)
-        if (Marker_position >= Green_zone_min && Marker_position <= Green_zone_max) {
-            game.showLongText(Game_messages[0], DialogLayout.Bottom)
-        } else {
-            game.showLongText(Game_messages[3], DialogLayout.Bottom)
-        }
     } else if (Ball_holder == 0) {
         if (Distance(player2, Ball) < 25) {
             Ball_holder = 2
@@ -270,7 +269,7 @@ function Green_Bar2 () {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
-        `, SpriteKind.Player)
+        `, SpriteKind.UI)
     Green_Bar.setFlag(SpriteFlag.Invisible, true)
     Marker.setFlag(SpriteFlag.Invisible, true)
     Green_Bar.setPosition(80, 110)
@@ -357,6 +356,8 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.UI, function (sprite, otherS
     }
 })
 function Reset_Ball () {
+    Ball.unfollow()
+    ball_following = false
     Ball.setPosition(80, 90)
     Ball.setVelocity(0, 0)
     Ball_holder = 0
@@ -364,7 +365,6 @@ function Reset_Ball () {
     Marker_position = 0
     Green_Bar.setFlag(SpriteFlag.Invisible, true)
     Marker.setFlag(SpriteFlag.Invisible, true)
-    Ball.unfollow()
 }
 function CalculatePoints (PlayerNum: number) {
     if (PlayerNum == 1) {
@@ -416,14 +416,10 @@ controller.player1.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Press
         Green_Bar.setFlag(SpriteFlag.Invisible, false)
         Marker.setFlag(SpriteFlag.Invisible, false)
     } else if (Ball_holder == 1 && Shooting == true) {
+        shot_x = player1.x
         Launch_Shot(1)
         Green_Bar.setFlag(SpriteFlag.Invisible, true)
         Marker.setFlag(SpriteFlag.Invisible, true)
-        if (Marker_position >= Green_zone_min && Marker_position <= Green_zone_max) {
-            game.showLongText(Game_messages[0], DialogLayout.Bottom)
-        } else {
-            game.showLongText(Game_messages[3], DialogLayout.Bottom)
-        }
     } else if (Ball_holder == 0) {
         if (Distance(player1, Ball) < 25) {
             Ball_holder = 1
@@ -456,14 +452,14 @@ let dy = 0
 let dx = 0
 let Hoop_Left: Sprite = null
 let Hoop_Right: Sprite = null
-let shot_x = 0
-let ball_following = false
 let Marker: Sprite = null
 let Green_Bar: Sprite = null
 let Hoop_x: number[] = []
 let Player_Names: string[] = []
 let Game_messages: string[] = []
 let Dribble: number[] = []
+let shot_x = 0
+let ball_following = false
 let Player1score = 0
 let Player2Score = 0
 let Ball_holder = 0
