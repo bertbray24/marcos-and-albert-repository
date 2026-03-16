@@ -89,26 +89,26 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.UI, function (sprite, otherS
     if (otherSprite == Hoop_Right && Ball_holder == 0) {
         PTS = CalculatePoints(1)
         Award_Points(1, PTS)
+        Ball.setVelocity(0, 80)
+        pause(300)
         if (PTS == 2) {
             player1.sayText("3-POINTER!!", 1500, false)
         } else {
             player1.sayText("Scores!!!", 1500, false)
         }
-        Ball.setVelocity(0, 80)
-        pause(300)
         Reset_Ball()
         Jump_Ball()
     }
     if (otherSprite == Hoop_Left && Ball_holder == 0) {
         PTS = CalculatePoints(2)
         Award_Points(2, PTS)
+        Ball.setVelocity(0, 80)
+        pause(300)
         if (PTS == 2) {
             player2.sayText("3-POINTER!!", 1500, false)
         } else {
             player2.sayText("Scores!!!", 1500, false)
         }
-        Ball.setVelocity(0, 80)
-        pause(300)
         Reset_Ball()
         Jump_Ball()
     }
