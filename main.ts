@@ -90,9 +90,9 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.UI, function (sprite, otherS
         PTS = CalculatePoints(1)
         Award_Points(1, PTS)
         if (PTS == 2) {
-            game.showLongText("3-POINTER!!", DialogLayout.Bottom)
+            player1.sayText("3-POINTER!!", 1500, false)
         } else {
-            game.showLongText("Scores!!!", DialogLayout.Bottom)
+            player1.sayText("Scores!!!", 1500, false)
         }
         Ball.setVelocity(0, 80)
         pause(300)
@@ -103,9 +103,9 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.UI, function (sprite, otherS
         PTS = CalculatePoints(2)
         Award_Points(2, PTS)
         if (PTS == 2) {
-            game.showLongText("3-POINTER!!", DialogLayout.Bottom)
+            player2.sayText("3-POINTER!!", 1500, false)
         } else {
-            game.showLongText("Scores!!!", DialogLayout.Bottom)
+            player2.sayText("Scores!!!", 1500, false)
         }
         Ball.setVelocity(0, 80)
         pause(300)
@@ -454,8 +454,8 @@ let Dribble_step = 0
 let Winner = 0
 let Bounce_Offset = 0
 let Player1jump = false
-let player1: Sprite = null
 let distance = 0
+let player1: Sprite = null
 let PTS = 0
 let dy = 0
 let dx = 0
