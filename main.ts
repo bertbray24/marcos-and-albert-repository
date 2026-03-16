@@ -1,6 +1,298 @@
 namespace SpriteKind {
     export const UI = SpriteKind.create()
 }
+function Jump_Ball () {
+    ball_following = true
+    Ball.setPosition(80, 40)
+    Ball.setVelocity(0, 0)
+    pause(600)
+    ball_following = false
+    Ball.setVelocity(0, 50)
+}
+function Launch_Shot (PlayerNum: number) {
+    if (Marker_position >= Green_zone_min && Marker_position <= Green_zone_max) {
+        if (PlayerNum == 1) {
+            Ball.setVelocity(65, -110)
+            Ball.follow(Hoop_Right, 100)
+            ball_following = true
+        } else {
+            Ball.setVelocity(-65, -110)
+            Ball.follow(Hoop_Left, 100)
+            ball_following = true
+        }
+    } else {
+        if (PlayerNum == 1) {
+            Ball.setVelocity(60 + randint(-40, 40), -100)
+        } else {
+            Ball.setVelocity(-60 + randint(-40, 40), -100)
+        }
+    }
+    Ball_holder = 0
+    Shooting = false
+}
+controller.player2.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Pressed, function () {
+    if (Player2jump == false) {
+        Player2jump = true
+        player2.vy = -100
+        if (Distance(player2, Ball) < 22 && Ball_holder == 1) {
+            Ball.setVelocity(randint(-70, 70), randint(-90, -40))
+            Ball_holder = 0
+            Shooting = false
+            Green_Bar.setFlag(SpriteFlag.Invisible, true)
+            Marker.setFlag(SpriteFlag.Invisible, true)
+        }
+    }
+})
+function Award_Points (playernum: number, points: number) {
+    if (playernum == 1) {
+        Player1score = Player1score + points
+        info.player1.setScore(Player1score)
+    } else {
+        Player2Score = Player2Score + points
+        info.player2.setScore(Player2Score)
+    }
+    music.play(music.melodyPlayable(music.powerUp), music.PlaybackMode.InBackground)
+}
+function Check_Winner () {
+    if (Player1score >= 11) {
+        return 1
+    } else if (Player2Score >= 11) {
+        return 2
+    } else {
+        return 0
+    }
+}
+controller.player2.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Pressed, function () {
+    if (Ball_holder == 2 && Shooting == false) {
+        Shooting = true
+        Marker_position = 0
+        Marker_Direction = 1
+        Green_Bar.setFlag(SpriteFlag.Invisible, false)
+        Marker.setFlag(SpriteFlag.Invisible, false)
+    } else if (Ball_holder == 2 && Shooting == true) {
+        shot_x = player2.x
+        Launch_Shot(2)
+        Green_Bar.setFlag(SpriteFlag.Invisible, true)
+        Marker.setFlag(SpriteFlag.Invisible, true)
+    } else if (Ball_holder == 0) {
+        if (Distance(player2, Ball) < 25) {
+            Ball_holder = 2
+        }
+    }
+})
+function Distance (spriteA: Sprite, SpriteB: Sprite) {
+    dx = spriteA.x - SpriteB.x
+    dy = spriteA.y - SpriteB.y
+    return Math.sqrt(dx * dx + dy * dy)
+}
+sprites.onOverlap(SpriteKind.Projectile, SpriteKind.UI, function (sprite, otherSprite) {
+    if (otherSprite == Hoop_Right && Ball_holder == 0) {
+        PTS = CalculatePoints(1)
+        Award_Points(1, PTS)
+        if (PTS == 2) {
+            game.showLongText("3-POINTER!!", DialogLayout.Bottom)
+        } else {
+            game.showLongText("Scores!!!", DialogLayout.Bottom)
+        }
+        Ball.setVelocity(0, 80)
+        pause(300)
+        Reset_Ball()
+        Jump_Ball()
+    }
+    if (otherSprite == Hoop_Left && Ball_holder == 0) {
+        PTS = CalculatePoints(2)
+        Award_Points(2, PTS)
+        if (PTS == 2) {
+            game.showLongText("3-POINTER!!", DialogLayout.Bottom)
+        } else {
+            game.showLongText("Scores!!!", DialogLayout.Bottom)
+        }
+        Reset_Ball()
+        Jump_Ball()
+    }
+})
+function CalculatePoints (PlayerNum: number) {
+    if (PlayerNum == 1) {
+        distance = Math.abs(shot_x - 152)
+    } else if (PlayerNum == 2) {
+        distance = Math.abs(shot_x - 8)
+    }
+    if (distance > 55) {
+        return 2
+    } else {
+        return 1
+    }
+}
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, otherSprite) {
+    if (Ball_holder == 0 && (Math.abs(Ball.vx) < 10 && Math.abs(Ball.vy) < 10)) {
+        if (sprite == player1) {
+            Ball_holder = 1
+        } else if (sprite == player2) {
+            Ball_holder = 2
+        }
+    }
+})
+function Green_Bar2 () {
+    Green_Bar = sprites.create(img`
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        .ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff.
+        .fdddddddddddddddddddddd77777777777777ddddddddddddddddddddddddf.
+        .fdddddddddddddddddddddd77777777777777ddddddddddddddddddddddddf.
+        .fdddddddddddddddddddddd77777777777777ddddddddddddddddddddddddf.
+        .fdddddddddddddddddddddd77777777777777ddddddddddddddddddddddddf.
+        .fdddddddddddddddddddddd77777777777777ddddddddddddddddddddddddf.
+        .ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff.
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        ................................................................
+        `, SpriteKind.UI)
+    Marker = sprites.create(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . f f f f f f f f f f . . 
+        . . . . f f f f f f f f f f . . 
+        . . . . f f f f f f f f f f . . 
+        . . . . f f f f f f f f f f . . 
+        . . . . f f f f f f f f f f . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `, SpriteKind.UI)
+    Green_Bar.setFlag(SpriteFlag.Invisible, true)
+    Marker.setFlag(SpriteFlag.Invisible, true)
+    Green_Bar.setPosition(80, 110)
+    Marker.setPosition(57, 103)
+    Hoop_Right = sprites.create(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . 1 . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `, SpriteKind.UI)
+    Hoop_Right.setPosition(143, 74)
+    Hoop_Right.setFlag(SpriteFlag.Invisible, true)
+    Hoop_Left = sprites.create(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . 1 . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `, SpriteKind.UI)
+    Hoop_Left.setPosition(17, 74)
+    Hoop_Left.setFlag(SpriteFlag.Invisible, true)
+}
+controller.player1.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Pressed, function () {
+    if (Ball_holder == 1 && Shooting == false) {
+        Shooting = true
+        Marker_position = 0
+        Marker_Direction = 1
+        Green_Bar.setFlag(SpriteFlag.Invisible, false)
+        Marker.setFlag(SpriteFlag.Invisible, false)
+    } else if (Ball_holder == 1 && Shooting == true) {
+        shot_x = player1.x
+        Launch_Shot(1)
+        Green_Bar.setFlag(SpriteFlag.Invisible, true)
+        Marker.setFlag(SpriteFlag.Invisible, true)
+    } else if (Ball_holder == 0) {
+        if (Distance(player1, Ball) < 25) {
+            Ball_holder = 1
+        }
+    }
+})
+controller.player1.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Pressed, function () {
+    if (Player1jump == false) {
+        Player1jump = true
+        player1.vy = -100
+        if (Distance(player1, Ball) < 22 && Ball_holder == 2) {
+            Ball.setVelocity(randint(-70, 70), randint(-90, -40))
+            Ball_holder = 0
+            Shooting = false
+            Green_Bar.setFlag(SpriteFlag.Invisible, true)
+            Marker.setFlag(SpriteFlag.Invisible, true)
+        }
+    }
+})
 function Set_up () {
     Ball = sprites.create(img`
         . . . . f f f f f f . . . . . . 
@@ -140,219 +432,6 @@ function Set_up () {
     player2.setStayInScreen(true)
     Green_Bar2()
 }
-controller.player2.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Pressed, function () {
-    if (Player2jump == false) {
-        Player2jump = true
-        player2.vy = -100
-        if (Distance(player2, Ball) < 22 && Ball_holder == 1) {
-            Ball.setVelocity(randint(-70, 70), randint(-90, -40))
-            Ball_holder = 0
-            Shooting = false
-            Green_Bar.setFlag(SpriteFlag.Invisible, true)
-            Marker.setFlag(SpriteFlag.Invisible, true)
-        }
-    }
-})
-function Award_Points (playernum: number, points: number) {
-    if (playernum == 1) {
-        Player1score = Player1score + points
-        info.player1.setScore(Player1score)
-    } else {
-        Player2Score = Player2Score + points
-        info.player2.setScore(Player2Score)
-    }
-    music.play(music.melodyPlayable(music.powerUp), music.PlaybackMode.UntilDone)
-}
-controller.player2.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Pressed, function () {
-    if (Ball_holder == 2 && Shooting == false) {
-        Shooting = true
-        Marker_position = 0
-        Marker_Direction = 1
-        Green_Bar.setFlag(SpriteFlag.Invisible, false)
-        Marker.setFlag(SpriteFlag.Invisible, false)
-    } else if (Ball_holder == 2 && Shooting == true) {
-        shot_x = player2.x
-        Launch_Shot(2)
-        Green_Bar.setFlag(SpriteFlag.Invisible, true)
-        Marker.setFlag(SpriteFlag.Invisible, true)
-    } else if (Ball_holder == 0) {
-        if (Distance(player2, Ball) < 25) {
-            Ball_holder = 2
-        }
-    }
-})
-function Green_Bar2 () {
-    ball_following = false
-    shot_x = 0
-    Green_Bar = sprites.create(img`
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        .ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff.
-        .fdddddddddddddddddddddd77777777777777ddddddddddddddddddddddddf.
-        .fdddddddddddddddddddddd77777777777777ddddddddddddddddddddddddf.
-        .fdddddddddddddddddddddd77777777777777ddddddddddddddddddddddddf.
-        .fdddddddddddddddddddddd77777777777777ddddddddddddddddddddddddf.
-        .fdddddddddddddddddddddd77777777777777ddddddddddddddddddddddddf.
-        .ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff.
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        ................................................................
-        `, SpriteKind.UI)
-    Marker = sprites.create(img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . f f f f f f f f f f . . 
-        . . . . f f f f f f f f f f . . 
-        . . . . f f f f f f f f f f . . 
-        . . . . f f f f f f f f f f . . 
-        . . . . f f f f f f f f f f . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        `, SpriteKind.UI)
-    Green_Bar.setFlag(SpriteFlag.Invisible, true)
-    Marker.setFlag(SpriteFlag.Invisible, true)
-    Green_Bar.setPosition(80, 110)
-    Marker.setPosition(57, 103)
-    Hoop_Right = sprites.create(img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . 1 . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        `, SpriteKind.UI)
-    Hoop_Right.setPosition(143, 68)
-    Hoop_Right.setFlag(SpriteFlag.Invisible, true)
-    Hoop_Left = sprites.create(img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . 1 . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        `, SpriteKind.UI)
-    Hoop_Left.setPosition(17, 68)
-    Hoop_Left.setFlag(SpriteFlag.Invisible, true)
-}
-function Distance (spriteA: Sprite, SpriteB: Sprite) {
-    dx = spriteA.x - SpriteB.x
-    dy = spriteA.y - SpriteB.y
-    return Math.sqrt(dx * dx + dy * dy)
-}
-function Check_Winner () {
-    if (Player1score >= 11) {
-        return 1
-    } else if (Player2Score >= 11) {
-        return 2
-    } else {
-        return 0
-    }
-}
-sprites.onOverlap(SpriteKind.Projectile, SpriteKind.UI, function (sprite, otherSprite) {
-    if (otherSprite == Hoop_Right && Ball_holder == 0) {
-        PTS = CalculatePoints(1)
-        Award_Points(1, PTS)
-        if (PTS == 2) {
-            game.showLongText("3-POINTER!!", DialogLayout.Bottom)
-        } else {
-            game.showLongText("Scores!!!", DialogLayout.Bottom)
-        }
-        pause(1200)
-        Reset_Ball()
-        Jump_Ball()
-    }
-    if (otherSprite == Hoop_Left && Ball_holder == 0) {
-        PTS = CalculatePoints(2)
-        Award_Points(2, PTS)
-        if (PTS == 2) {
-            game.showLongText("3-POINTER!!", DialogLayout.Bottom)
-        } else {
-            game.showLongText("Scores!!!", DialogLayout.Bottom)
-        }
-        pause(1200)
-        Reset_Ball()
-        Jump_Ball()
-    }
-})
 function Reset_Ball () {
     Ball.unfollow()
     ball_following = false
@@ -364,118 +443,37 @@ function Reset_Ball () {
     Green_Bar.setFlag(SpriteFlag.Invisible, true)
     Marker.setFlag(SpriteFlag.Invisible, true)
 }
-function CalculatePoints (PlayerNum: number) {
-    if (PlayerNum == 1) {
-        distance = Math.abs(shot_x - 152)
-    } else if (PlayerNum == 2) {
-        distance = Math.abs(shot_x - 8)
-    }
-    if (distance > 55) {
-        return 2
-    } else {
-        return 1
-    }
-}
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, otherSprite) {
-    if (Ball_holder == 0 && (Math.abs(Ball.vx) < 10 && Math.abs(Ball.vy) < 10)) {
-        if (sprite == player1) {
-            Ball_holder = 1
-        } else if (sprite == player2) {
-            Ball_holder = 2
-        }
-    }
-})
-function Launch_Shot (PlayerNum: number) {
-    if (Marker_position >= Green_zone_min && Marker_position <= Green_zone_max) {
-        if (PlayerNum == 1) {
-            Ball.setVelocity(65, -110)
-            Ball.follow(Hoop_Right, 100)
-            ball_following = true
-        } else {
-            Ball.setVelocity(-65, -110)
-            Ball.follow(Hoop_Left, 100)
-            ball_following = true
-        }
-    } else {
-        if (PlayerNum == 1) {
-            Ball.setVelocity(60 + randint(-40, 40), -100)
-        } else {
-            Ball.setVelocity(-60 + randint(-40, 40), -100)
-        }
-    }
-    Ball_holder = 0
-    Shooting = false
-}
-controller.player1.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Pressed, function () {
-    if (Ball_holder == 1 && Shooting == false) {
-        Shooting = true
-        Marker_position = 0
-        Marker_Direction = 1
-        Green_Bar.setFlag(SpriteFlag.Invisible, false)
-        Marker.setFlag(SpriteFlag.Invisible, false)
-    } else if (Ball_holder == 1 && Shooting == true) {
-        shot_x = player1.x
-        Launch_Shot(1)
-        Green_Bar.setFlag(SpriteFlag.Invisible, true)
-        Marker.setFlag(SpriteFlag.Invisible, true)
-    } else if (Ball_holder == 0) {
-        if (Distance(player1, Ball) < 25) {
-            Ball_holder = 1
-        }
-    }
-})
-function Jump_Ball () {
-    ball_following = true
-    Ball.setPosition(80, 40)
-    Ball.setVelocity(0, 0)
-    pause(600)
-    ball_following = false
-    Ball.setVelocity(0, 50)
-}
-controller.player1.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Pressed, function () {
-    if (Player1jump == false) {
-        Player1jump = true
-        player1.vy = -100
-        if (Distance(player1, Ball) < 22 && Ball_holder == 2) {
-            Ball.setVelocity(randint(-70, 70), randint(-90, -40))
-            Ball_holder = 0
-            Shooting = false
-            Green_Bar.setFlag(SpriteFlag.Invisible, true)
-            Marker.setFlag(SpriteFlag.Invisible, true)
-        }
-    }
-})
-let dy = 0
-let dx = 0
-let Hoop_Left: Sprite = null
-let Hoop_Right: Sprite = null
-let Marker: Sprite = null
-let Green_Bar: Sprite = null
 let Hoop_x: number[] = []
 let Player_Names: string[] = []
 let Game_messages: string[] = []
 let Dribble: number[] = []
-let shot_x = 0
-let ball_following = false
-let Player1score = 0
-let Player2Score = 0
-let Ball_holder = 0
-let Shooting = false
-let Marker_position = 0
-let Marker_Direction = 0
-let Green_zone_max = 0
-let Green_zone_min = 0
-let Player1jump = false
-let Player2jump = false
 let dribble_Timer = 0
 let Dribble_step = 0
-let distance = 0
-let PTS = 0
 let Winner = 0
 let Bounce_Offset = 0
-let player2: Sprite = null
+let Player1jump = false
 let player1: Sprite = null
+let distance = 0
+let PTS = 0
+let dy = 0
+let dx = 0
+let shot_x = 0
+let Marker_Direction = 0
+let Player2Score = 0
+let Player1score = 0
+let Marker: Sprite = null
+let Green_Bar: Sprite = null
+let player2: Sprite = null
+let Player2jump = false
+let Shooting = false
+let Ball_holder = 0
+let Hoop_Left: Sprite = null
+let Hoop_Right: Sprite = null
+let Green_zone_max = 0
+let Green_zone_min = 0
+let Marker_position = 0
 let Ball: Sprite = null
+let ball_following = false
 scene.setBackgroundImage(img`
     cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
     cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
