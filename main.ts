@@ -107,6 +107,8 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.UI, function (sprite, otherS
         } else {
             game.showLongText("Scores!!!", DialogLayout.Bottom)
         }
+        Ball.setVelocity(0, 80)
+        pause(300)
         Reset_Ball()
         Jump_Ball()
     }
@@ -124,7 +126,7 @@ function CalculatePoints (PlayerNum: number) {
     }
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, otherSprite) {
-    if (Ball_holder == 0 && (Math.abs(Ball.vx) < 10 && Math.abs(Ball.vy) < 10)) {
+    if (Ball_holder == 0 && (Math.abs(Ball.vx) < 10 && (Math.abs(Ball.vy) < 10 && ball_following == false))) {
         if (sprite == player1) {
             Ball_holder = 1
         } else if (sprite == player2) {
@@ -655,7 +657,9 @@ game.onUpdate(function () {
         player2.vy = 0
         Player2jump = false
     }
-    Winner = Check_Winner()
+    if (Winner == 0) {
+        Winner = Check_Winner()
+    }
     if (Winner != 0) {
         game.showLongText("" + Player_Names[Winner - 1] + " WINS!!", DialogLayout.Bottom)
         game.gameOver(true)
