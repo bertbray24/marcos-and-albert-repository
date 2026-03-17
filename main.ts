@@ -5,7 +5,7 @@ function Jump_Ball () {
     ball_following = true
     Ball.setPosition(80, 40)
     Ball.setVelocity(0, 0)
-    pause(600)
+    pause(300)
     ball_following = false
     Ball.setVelocity(0, 50)
 }
@@ -608,10 +608,10 @@ scene.setBackgroundImage(img`
     44444444444444444ffff4444444444444444444444444444444444444444444444444444444444f444444444444444444444444444444444444444444444444444444444ffff4444444444444444444
     ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     `)
-game.showLongText("BASKETBALL - Same keyboard, 2 players! First to 11 wins!", DialogLayout.Center)
-game.showLongText("PLAYER 1 (RED): Arrow keys to move | K = Pickup/Shoot | L = Jump/Block", DialogLayout.Center)
-game.showLongText("PLAYER 2 (BLUE): W A S D to move | Q = Pickup/Shoot | E = Jump/Block", DialogLayout.Center)
-game.showLongText("Stop the marker in the GREEN zone to score! Miss = random shot", DialogLayout.Center)
+game.splash("BASKETBALL - Same keyboard, 2 players! First to 11 wins!")
+game.splash("PLAYER 1 (RED): Arrow keys to move | K = Pickup/Shoot | L = Jump/Block")
+game.splash("PLAYER 2 (BLUE): W A S D to move | Q = Pickup/Shoot | E = Jump/Block")
+game.splash("Stop the marker in the GREEN zone to score! Miss = random shot")
 Set_up()
 Jump_Ball()
 game.onUpdate(function () {
@@ -667,13 +667,13 @@ game.onUpdate(function () {
         player2.vy = 0
         Player2jump = false
     }
-    if (Player1jump == true && (Distance(player1, Ball) < 22 && ball_following == true)) {
+    if (Player1jump == true && (Distance(player1, Ball) < 22 && (Ball_holder == 0 && (Math.abs(Ball.vx) > 20 && Math.abs(Ball.vy) > 20)))) {
         Ball.unfollow()
         ball_following = false
         Ball.setVelocity(randint(-70, 70), randint(-90, -40))
         game.splash("Blocked!")
     }
-    if (Player2jump == true && (Distance(player2, Ball) < 22 && ball_following == true)) {
+    if (Player2jump == true && (Distance(player2, Ball) < 22 && (Ball_holder == 0 && (Math.abs(Ball.vx) > 20 && Math.abs(Ball.vy) > 20)))) {
         Ball.unfollow()
         ball_following = false
         Ball.setVelocity(randint(-70, 70), randint(-90, -40))
@@ -683,7 +683,7 @@ game.onUpdate(function () {
         Winner = Check_Winner()
     }
     if (Winner != 0) {
-        game.showLongText("" + Player_Names[Winner - 1] + " WINS!!", DialogLayout.Bottom)
+        game.splash("" + Player_Names[Winner - 1] + " WINS!!")
         game.gameOver(true)
     }
 })
