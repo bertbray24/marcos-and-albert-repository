@@ -418,24 +418,6 @@ function Set_up () {
     tiles.setCurrentTilemap(tilemap`level1`)
     player1.setStayInScreen(true)
     player2.setStayInScreen(true)
-    Keybinds.setSimulatorKeymap(
-    Keybinds.PlayerNumber.ONE,
-    Keybinds.CustomKey.UP,
-    Keybinds.CustomKey.DOWN,
-    Keybinds.CustomKey.LEFT,
-    Keybinds.CustomKey.RIGHT,
-    Keybinds.CustomKey.K,
-    Keybinds.CustomKey.L
-    )
-    Keybinds.setSimulatorKeymap(
-    Keybinds.PlayerNumber.TWO,
-    Keybinds.CustomKey.W,
-    Keybinds.CustomKey.S,
-    Keybinds.CustomKey.A,
-    Keybinds.CustomKey.D,
-    Keybinds.CustomKey.Q,
-    Keybinds.CustomKey.E
-    )
     Green_Bar2()
 }
 function Reset_Ball () {
@@ -608,8 +590,26 @@ scene.setBackgroundImage(img`
     44444444444444444ffff4444444444444444444444444444444444444444444444444444444444f444444444444444444444444444444444444444444444444444444444ffff4444444444444444444
     ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     `)
+Keybinds.setSimulatorKeymap(
+Keybinds.PlayerNumber.ONE,
+Keybinds.CustomKey.UP,
+Keybinds.CustomKey.DOWN,
+Keybinds.CustomKey.LEFT,
+Keybinds.CustomKey.RIGHT,
+Keybinds.CustomKey.M,
+Keybinds.CustomKey.P
+)
+Keybinds.setSimulatorKeymap(
+Keybinds.PlayerNumber.TWO,
+Keybinds.CustomKey.W,
+Keybinds.CustomKey.S,
+Keybinds.CustomKey.A,
+Keybinds.CustomKey.D,
+Keybinds.CustomKey.Q,
+Keybinds.CustomKey.E
+)
 game.splash("BASKETBALL - Same keyboard, 2 players! First to 11 wins!")
-game.splash("PLAYER 1 (RED): Arrow keys to move | K = Pickup/Shoot | L = Jump/Block")
+game.splash("PLAYER 1 (RED): Arrow keys to move | M = Pickup/Shoot | P = Jump/Block")
 game.splash("PLAYER 2 (BLUE): W A S D to move | Q = Pickup/Shoot | E = Jump/Block")
 game.splash("Stop the marker in the GREEN zone to score! Miss = random shot")
 Set_up()
@@ -667,13 +667,13 @@ game.onUpdate(function () {
         player2.vy = 0
         Player2jump = false
     }
-    if (Player1jump == true && (Distance(player1, Ball) < 22 && (Ball_holder == 0 && (Math.abs(Ball.vx) > 20 && Math.abs(Ball.vy) > 20)))) {
+    if (Player1jump == true && (Distance(player1, Ball) < 22 && (Ball_holder == 0 && (Math.abs(Ball.vx) > 20 || Math.abs(Ball.vy) > 20)))) {
         Ball.unfollow()
         ball_following = false
         Ball.setVelocity(randint(-70, 70), randint(-90, -40))
         game.splash("Blocked!")
     }
-    if (Player2jump == true && (Distance(player2, Ball) < 22 && (Ball_holder == 0 && (Math.abs(Ball.vx) > 20 && Math.abs(Ball.vy) > 20)))) {
+    if (Player2jump == true && (Distance(player2, Ball) < 22 && (Ball_holder == 0 && (Math.abs(Ball.vx) > 20 || Math.abs(Ball.vy) > 20)))) {
         Ball.unfollow()
         ball_following = false
         Ball.setVelocity(randint(-70, 70), randint(-90, -40))
