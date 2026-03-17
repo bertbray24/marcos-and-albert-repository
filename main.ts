@@ -34,13 +34,6 @@ controller.player2.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Press
     if (Player2jump == false) {
         Player2jump = true
         player2.vy = -100
-        if (Distance(player2, Ball) < 22 && Ball_holder == 1) {
-            Ball.setVelocity(randint(-70, 70), randint(-90, -40))
-            Ball_holder = 0
-            Shooting = false
-            Green_Bar.setFlag(SpriteFlag.Invisible, true)
-            Marker.setFlag(SpriteFlag.Invisible, true)
-        }
     }
 })
 function Award_Points (playernum: number, points: number) {
@@ -286,13 +279,6 @@ controller.player1.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Press
     if (Player1jump == false) {
         Player1jump = true
         player1.vy = -100
-        if (Distance(player1, Ball) < 22 && Ball_holder == 2) {
-            Ball.setVelocity(randint(-70, 70), randint(-90, -40))
-            Ball_holder = 0
-            Shooting = false
-            Green_Bar.setFlag(SpriteFlag.Invisible, true)
-            Marker.setFlag(SpriteFlag.Invisible, true)
-        }
     }
 })
 function Set_up () {
@@ -478,11 +464,11 @@ let PTS = 0
 let dy = 0
 let dx = 0
 let shot_x = 0
+let Marker: Sprite = null
+let Green_Bar: Sprite = null
 let Marker_Direction = 0
 let Player2Score = 0
 let Player1score = 0
-let Marker: Sprite = null
-let Green_Bar: Sprite = null
 let player2: Sprite = null
 let Player2jump = false
 let Shooting = false
@@ -617,7 +603,7 @@ scene.setBackgroundImage(img`
     ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     `)
 game.showLongText("BASKETBALL - Same keyboard, 2 players! First to 11 wins!", DialogLayout.Center)
-game.showLongText("PLAYER 1 (RED): Arrow keys to move | Z = Pickup/Shoot | X = Jump/Block", DialogLayout.Center)
+game.showLongText("PLAYER 1 (RED): Arrow keys to move | K = Pickup/Shoot | L = Jump/Block", DialogLayout.Center)
 game.showLongText("PLAYER 2 (BLUE): W A S D to move | Q = Pickup/Shoot | E = Jump/Block", DialogLayout.Center)
 game.showLongText("Stop the marker in the GREEN zone to score! Miss = random shot", DialogLayout.Center)
 Set_up()
