@@ -387,6 +387,10 @@ function Set_up () {
     player1.setPosition(55, 90)
     player2.setPosition(105, 90)
     Ball.setPosition(80, 90)
+    P1A_was_down = false
+    P1B_was_down = false
+    P2A_was_down = false
+    P2B_was_down = false
     Bounce_Offset = 0
     Winner = 0
     PTS = 0
@@ -453,6 +457,10 @@ let dribble_Timer = 0
 let Dribble_step = 0
 let Winner = 0
 let Bounce_Offset = 0
+let P2B_was_down = false
+let P2A_was_down = false
+let P1B_was_down = false
+let P1A_was_down = false
 let Player1jump = false
 let distance = 0
 let player1: Sprite = null
@@ -656,6 +664,18 @@ game.onUpdate(function () {
         player2.y = 90
         player2.vy = 0
         Player2jump = false
+    }
+    if (Player1jump == true && (Distance(player1, Ball) < 22 && ball_following == true)) {
+        Ball.unfollow()
+        ball_following = false
+        Ball.setVelocity(randint(-70, 70), randint(-90, -40))
+        game.splash("Blocked!")
+    }
+    if (Player2jump == true && (Distance(player2, Ball) < 22 && ball_following == true)) {
+        Ball.unfollow()
+        ball_following = false
+        Ball.setVelocity(randint(-70, 70), randint(-90, -40))
+        game.splash("Blocked!")
     }
     if (Winner == 0) {
         Winner = Check_Winner()
