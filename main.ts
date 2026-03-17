@@ -448,6 +448,12 @@ function Reset_Ball () {
     Marker_position = 0
     Green_Bar.setFlag(SpriteFlag.Invisible, true)
     Marker.setFlag(SpriteFlag.Invisible, true)
+    player1.setPosition(55, 90)
+    player2.setPosition(105, 90)
+    player1.setVelocity(0, 0)
+    player2.setVelocity(0, 0)
+    Player1jump = false
+    Player2jump = false
 }
 let Hoop_x: number[] = []
 let Player_Names: string[] = []
