@@ -387,10 +387,6 @@ function Set_up () {
     player1.setPosition(55, 90)
     player2.setPosition(105, 90)
     Ball.setPosition(80, 90)
-    P1A_was_down = false
-    P1B_was_down = false
-    P2A_was_down = false
-    P2B_was_down = false
     Bounce_Offset = 0
     Winner = 0
     PTS = 0
@@ -436,6 +432,24 @@ function Set_up () {
     tiles.setCurrentTilemap(tilemap`level1`)
     player1.setStayInScreen(true)
     player2.setStayInScreen(true)
+    Keybinds.setSimulatorKeymap(
+    Keybinds.PlayerNumber.ONE,
+    Keybinds.CustomKey.UP,
+    Keybinds.CustomKey.DOWN,
+    Keybinds.CustomKey.LEFT,
+    Keybinds.CustomKey.RIGHT,
+    Keybinds.CustomKey.K,
+    Keybinds.CustomKey.L
+    )
+    Keybinds.setSimulatorKeymap(
+    Keybinds.PlayerNumber.TWO,
+    Keybinds.CustomKey.W,
+    Keybinds.CustomKey.S,
+    Keybinds.CustomKey.A,
+    Keybinds.CustomKey.D,
+    Keybinds.CustomKey.Q,
+    Keybinds.CustomKey.E
+    )
     Green_Bar2()
 }
 function Reset_Ball () {
@@ -457,10 +471,6 @@ let dribble_Timer = 0
 let Dribble_step = 0
 let Winner = 0
 let Bounce_Offset = 0
-let P2B_was_down = false
-let P2A_was_down = false
-let P1B_was_down = false
-let P1A_was_down = false
 let Player1jump = false
 let distance = 0
 let player1: Sprite = null

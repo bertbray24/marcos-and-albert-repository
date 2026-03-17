@@ -5,7 +5,8 @@
         "device": "*",
         "darts": "*",
         "multiplayer": "*",
-        "controller": "*"
+        "controller": "*",
+        "Custom Keybind Extension": "github:Brohann3214/custom-keybind-extension#ce1cb5acda5cd438592e38da4aaab10b73b46c64"
     },
     "files": [
         "main.blocks",
