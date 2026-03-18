@@ -2,11 +2,13 @@ namespace SpriteKind {
     export const UI = SpriteKind.create()
 }
 function Jump_Ball () {
+    jump_ball_active = true
     ball_following = true
     Ball.setPosition(80, 40)
     Ball.setVelocity(0, 0)
     pause(300)
     ball_following = false
+    jump_ball_active = false
     Ball.setVelocity(0, 50)
 }
 function Launch_Shot (PlayerNum: number) {
@@ -282,6 +284,7 @@ controller.player1.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Press
     }
 })
 function Set_up () {
+    jump_ball_active = false
     blocked = false
     Ball = sprites.create(img`
         . . . . f f f f f f . . . . . . 
@@ -471,6 +474,7 @@ let Green_zone_min = 0
 let Marker_position = 0
 let Ball: Sprite = null
 let ball_following = false
+let jump_ball_active = false
 scene.setBackgroundImage(img`
     cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
     cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -619,7 +623,7 @@ Set_up()
 Jump_Ball()
 game.onUpdate(function () {
     if (Shooting == true) {
-        Marker_position = Marker_position + Marker_Direction * 2
+        Marker_position = Marker_position + Marker_Direction * 4
         if (Marker_position >= 100) {
             Marker_position = 100
             Marker_Direction = -1
@@ -670,14 +674,14 @@ game.onUpdate(function () {
         player2.vy = 0
         Player2jump = false
     }
-    if (Player1jump == true && (blocked == false && (Distance(player1, Ball) < 22 && (Ball_holder == 0 || ball_following == true))) && (Math.abs(Ball.vx) > 20 || Math.abs(Ball.vy) > 20)) {
+    if (Player1jump == true && (blocked == false && (Distance(player1, Ball) < 22 && (Ball_holder == 0 || ball_following == true))) && (Math.abs(Ball.vx) > 20 || Math.abs(Ball.vy) > 20 && jump_ball_active == false)) {
         Ball.unfollow()
         ball_following = false
         blocked = true
         Ball.setVelocity(randint(-70, 70), randint(-90, -40))
         player1.sayText("BLOCKED!", 1500, false)
     }
-    if (Player2jump == true && (blocked == false && (Distance(player2, Ball) < 22 && (Ball_holder == 0 || ball_following == true))) && (Math.abs(Ball.vx) > 20 || Math.abs(Ball.vy) > 20)) {
+    if (Player2jump == true && (blocked == false && (Distance(player2, Ball) < 22 && (Ball_holder == 0 || ball_following == true))) && (Math.abs(Ball.vx) > 20 || Math.abs(Ball.vy) > 20 && jump_ball_active == false)) {
         Ball.unfollow()
         ball_following = false
         blocked = true
