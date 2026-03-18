@@ -282,6 +282,7 @@ controller.player1.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Press
     }
 })
 function Set_up () {
+    blocked = false
     Ball = sprites.create(img`
         . . . . f f f f f f . . . . . . 
         . . f f 6 6 6 f 6 6 f f . . . . 
@@ -436,6 +437,7 @@ function Reset_Ball () {
     player2.setVelocity(0, 0)
     Player1jump = false
     Player2jump = false
+    blocked = false
 }
 let Hoop_x: number[] = []
 let Player_Names: string[] = []
@@ -445,6 +447,7 @@ let dribble_Timer = 0
 let Dribble_step = 0
 let Winner = 0
 let Bounce_Offset = 0
+let blocked = false
 let Player1jump = false
 let distance = 0
 let player1: Sprite = null
@@ -667,23 +670,18 @@ game.onUpdate(function () {
         player2.vy = 0
         Player2jump = false
     }
-    if (Player1jump == true && (Distance(player1, Ball) < 22 && (Ball_holder == 0 && (Math.abs(Ball.vx) > 20 || Math.abs(Ball.vy) > 20)))) {
+    if (Player1jump == true && (blocked == false && (Distance(player1, Ball) < 22 && (Ball_holder == 0 || ball_following == true))) && (Math.abs(Ball.vx) > 20 || Math.abs(Ball.vy) > 20)) {
         Ball.unfollow()
         ball_following = false
+        blocked = true
         Ball.setVelocity(randint(-70, 70), randint(-90, -40))
-        game.splash("Blocked!")
+        player1.sayText("BLOCKED!", 1500, false)
     }
-    if (Player2jump == true && (Distance(player2, Ball) < 22 && (Ball_holder == 0 && (Math.abs(Ball.vx) > 20 || Math.abs(Ball.vy) > 20)))) {
+    if (Player2jump == true && (blocked == false && (Distance(player2, Ball) < 22 && (Ball_holder == 0 || ball_following == true))) && (Math.abs(Ball.vx) > 20 || Math.abs(Ball.vy) > 20)) {
         Ball.unfollow()
         ball_following = false
+        blocked = true
         Ball.setVelocity(randint(-70, 70), randint(-90, -40))
-        game.splash("Blocked!")
-    }
-    if (Winner == 0) {
-        Winner = Check_Winner()
-    }
-    if (Winner != 0) {
-        game.splash("" + Player_Names[Winner - 1] + " WINS!!")
-        game.gameOver(true)
+        player2.sayText("BLOCKED!", 1500, false)
     }
 })
