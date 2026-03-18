@@ -660,12 +660,12 @@ game.onUpdate(function () {
             Ball.vx = Math.abs(Ball.vx) * -1
         }
     }
-    if (Player1jump == true && player1.y >= 90) {
+    if (Player1jump == true && (player1.y >= 90 && player1.vy >= 0)) {
         player1.y = 90
         player1.vy = 0
         Player1jump = false
     }
-    if (Player2jump == true && player2.y >= 90) {
+    if (Player2jump == true && (player2.y >= 90 && player2.vy >= 0)) {
         player2.y = 90
         player2.vy = 0
         Player2jump = false
@@ -683,5 +683,12 @@ game.onUpdate(function () {
         blocked = true
         Ball.setVelocity(randint(-70, 70), randint(-90, -40))
         player2.sayText("BLOCKED!", 1500, false)
+    }
+    if (Winner == 0) {
+        Winner = Check_Winner()
+    }
+    if (Winner != 0) {
+        game.splash("" + Player_Names[Winner - 1] + " WINS!!")
+        game.gameOver(true)
     }
 })
