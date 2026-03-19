@@ -622,6 +622,12 @@ game.splash("Stop the marker in the GREEN zone to score! Miss = random shot")
 Set_up()
 Jump_Ball()
 game.onUpdate(function () {
+    if (Player1jump == true && (blocked == false && ((Distance(player1, Ball) < 22 || ball_following == true) && (Ball_holder == 0 || (Math.abs(Ball.vx) > 20 || Math.abs(Ball.vy) > 20))))) {
+        blocked = true
+    }
+    if (Player2jump == true && (blocked == false && ((Distance(player2, Ball) < 22 || ball_following == true) && (Ball_holder == 0 || (Math.abs(Ball.vx) > 20 || Math.abs(Ball.vy) > 20))))) {
+        blocked = true
+    }
     if (Shooting == true) {
         Marker_position = Marker_position + Marker_Direction * 4
         if (Marker_position >= 100) {
