@@ -9,8 +9,9 @@ function Jump_Ball () {
     Ball.setVelocity(0, 0)
     pause(300)
     ball_following = false
-    jump_ball_active = false
     Ball.setVelocity(0, 50)
+    pause(800)
+    jump_ball_active = false
 }
 function Launch_Shot (PlayerNum: number) {
     if (Marker_position >= Green_zone_min && Marker_position <= Green_zone_max) {
