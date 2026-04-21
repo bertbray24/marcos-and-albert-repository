@@ -37,12 +37,6 @@ function Launch_Shot (PlayerNum: number) {
     Ball_holder = 0
     Shooting = false
 }
-controller.player2.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Pressed, function () {
-    if (Player2jump == false) {
-        Player2jump = true
-        player2.vy = -100
-    }
-})
 function Award_Points (playernum: number, points: number) {
     if (playernum == 1) {
         Player1score = Player1score + points
@@ -62,24 +56,6 @@ function Check_Winner () {
         return 0
     }
 }
-controller.player2.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Pressed, function () {
-    if (Ball_holder == 2 && Shooting == false) {
-        Shooting = true
-        Marker_position = 0
-        Marker_Direction = 1
-        Green_Bar.setFlag(SpriteFlag.Invisible, false)
-        Marker.setFlag(SpriteFlag.Invisible, false)
-    } else if (Ball_holder == 2 && Shooting == true) {
-        shot_x = player2.x
-        Launch_Shot(2)
-        Green_Bar.setFlag(SpriteFlag.Invisible, true)
-        Marker.setFlag(SpriteFlag.Invisible, true)
-    } else if (Ball_holder == 0) {
-        if (Distance(player2, Ball) < 25) {
-            Ball_holder = 2
-        }
-    }
-})
 function Distance (spriteA: Sprite, SpriteB: Sprite) {
     dx = spriteA.x - SpriteB.x
     dy = spriteA.y - SpriteB.y
@@ -343,44 +319,8 @@ function Set_up () {
         ................................
         ................................
         `, SpriteKind.Player)
-    player2 = sprites.create(img`
-        ............ffff................
-        ............ffff................
-        ............ffff................
-        ............eeee................
-        ............feee................
-        ............eeee................
-        ............deee................
-        ............eeee................
-        .............ee.................
-        ............8888................
-        ............8888................
-        ............8888................
-        ............8ee8................
-        ............8ee8................
-        ............8ee8................
-        ............8888................
-        ............8888................
-        ............8..8................
-        ............e..e................
-        ............8..8................
-        ............8..8................
-        ................................
-        ................................
-        ................................
-        ................................
-        ................................
-        ................................
-        ................................
-        ................................
-        ................................
-        ................................
-        ................................
-        `, SpriteKind.Player)
-    controller.player2.moveSprite(player2, 100, 0)
     controller.player1.moveSprite(player1, 100, 0)
     player1.setPosition(55, 90)
-    player2.setPosition(105, 90)
     Ball.setPosition(80, 90)
     Bounce_Offset = 0
     Winner = 0
@@ -388,7 +328,6 @@ function Set_up () {
     distance = 0
     Dribble_step = 0
     dribble_Timer = 0
-    Player2jump = false
     Player1jump = false
     Green_zone_min = 35
     Green_zone_max = 65
@@ -396,7 +335,6 @@ function Set_up () {
     Marker_position = 0
     Shooting = false
     Ball_holder = 0
-    Player2Score = 0
     Player1score = 0
     ball_following = false
     shot_x = 0
@@ -423,10 +361,8 @@ function Set_up () {
     info.player1.setScore(0)
     info.player2.setScore(0)
     player1.ay = 250
-    player2.ay = 250
     tiles.setCurrentTilemap(tilemap`level1`)
     player1.setStayInScreen(true)
-    player2.setStayInScreen(true)
     Green_Bar2()
 }
 function Reset_Ball () {
@@ -440,13 +376,12 @@ function Reset_Ball () {
     Green_Bar.setFlag(SpriteFlag.Invisible, true)
     Marker.setFlag(SpriteFlag.Invisible, true)
     player1.setPosition(55, 90)
-    player2.setPosition(105, 90)
     player1.setVelocity(0, 0)
-    player2.setVelocity(0, 0)
     Player1jump = false
     Player2jump = false
     blocked = false
 }
+let Player2jump = false
 let Hoop_x: number[] = []
 let Player_Names: string[] = []
 let Game_messages: string[] = []
@@ -457,19 +392,18 @@ let Winner = 0
 let Bounce_Offset = 0
 let blocked = false
 let Player1jump = false
+let Marker_Direction = 0
+let Marker: Sprite = null
+let Green_Bar: Sprite = null
+let shot_x = 0
 let distance = 0
+let player2: Sprite = null
 let player1: Sprite = null
 let PTS = 0
 let dy = 0
 let dx = 0
-let shot_x = 0
-let Marker: Sprite = null
-let Green_Bar: Sprite = null
-let Marker_Direction = 0
 let Player2Score = 0
 let Player1score = 0
-let player2: Sprite = null
-let Player2jump = false
 let Shooting = false
 let Ball_holder = 0
 let Hoop_Left: Sprite = null
@@ -610,15 +544,6 @@ Keybinds.CustomKey.LEFT,
 Keybinds.CustomKey.RIGHT,
 Keybinds.CustomKey.M,
 Keybinds.CustomKey.P
-)
-Keybinds.setSimulatorKeymap(
-Keybinds.PlayerNumber.TWO,
-Keybinds.CustomKey.W,
-Keybinds.CustomKey.S,
-Keybinds.CustomKey.A,
-Keybinds.CustomKey.D,
-Keybinds.CustomKey.Q,
-Keybinds.CustomKey.E
 )
 game.splash("BASKETBALL - Same keyboard, 2 players! First to 11 wins!")
 game.splash("PLAYER 1 (RED): Arrow keys to move | M = Pickup/Shoot | P = Jump/Block")
