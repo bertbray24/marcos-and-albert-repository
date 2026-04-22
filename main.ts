@@ -18,8 +18,8 @@ function Launch_Shot (PlayerNum: number) {
     Shooting = false
 }
 function Award_Points (points: number) {
-    Player1score = 0
-    info.player1.setScore(Player1score)
+    Player1score = Player1score + points
+    info.setScore(Player1score)
     music.play(music.melodyPlayable(music.powerUp), music.PlaybackMode.InBackground)
 }
 function Distance (spriteA: Sprite, SpriteB: Sprite) {
@@ -272,9 +272,9 @@ function Set_up () {
     1,
     0
     ]
-    info.player1.setScore(0)
     player1.ay = 250
     tiles.setCurrentTilemap(tilemap`level1`)
+    info.setScore(0)
     player1.setStayInScreen(true)
     Green_Bar2()
 }
