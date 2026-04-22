@@ -1,6 +1,45 @@
 namespace SpriteKind {
     export const UI = SpriteKind.create()
 }
+/**
+ * This part of code allows the player to be able to jump in the beginning and when the ball is reset.
+ */
+/**
+ * This code deals with the "A" button which does multiple things. If your near the ball, it picks it up, your first press starts the meter, and then the second press launches the shot
+ */
+/**
+ * This code allows the ball to go through the hoop, calculate the points, and reset for the next possession. It does this when you launch the ball, and it overlaps the hoop, it calls "calculate points" and calls "Award points." Afterwards, the player will say either "3 - Pointer" or "Scores" depending on the shot distance. After all of this, it is called "reset ball."
+ */
+/**
+ * This code prevents the player from grabbing the ball mid - air while its shot. The ball has to be almost completely still to be picked up.
+ */
+/**
+ * This "On Start" code explains how the game works and provides the player details on what to do.
+ */
+/**
+ * This "on game update" part of code, includes the shot meters frame and the visuals of the moving bar. The code includes the dribble animations where the Ball Holder = 1, a dribble timer counts, which resets and advances a list based offset. It also includes ball physics, where if the ball is in the air, gravity pulls it down by increasing vy. If the ball hits the floor, it bounces by reversing and reducing vy, also if the ball hits the left/ right walls, vx reverses.
+ */
+/**
+ * This function allows the player to time their shot with a meter. If they time it right, the ball will follow the hoop, which would make it go in. If they don't time it right, the ball picks a random velocity and position.
+ */
+/**
+ * This function allows the player to be awarded points if they make the shot. If they do, a sound plays!
+ */
+/**
+ * This function takes the distance between the x's and y's and uses a distance formula based on the Pythagorean Theorem to show the spacing between 2 sprites
+ */
+/**
+ * This function determines the amount of points based on the distance of the shot.
+ */
+/**
+ * This function shows the "Bar Sprite" to time the shot, including the position and speed.
+ */
+/**
+ * This function shows the setup, which includes the player starting position, the ball position, the dribble as an array, and the 30 secs the player has to make shots.
+ */
+/**
+ * This function allows the ball to be reset when a shot is made. this includes the position, resets, and detaches the ball from any sprite it was following.
+ */
 function Launch_Shot () {
     if (Marker_position >= Green_zone_min && Marker_position <= Green_zone_max) {
         Ball.setVelocity(65, -110)
