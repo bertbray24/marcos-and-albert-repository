@@ -3,15 +3,11 @@ namespace SpriteKind {
 }
 function Launch_Shot () {
     if (Marker_position >= Green_zone_min && Marker_position <= Green_zone_max) {
-        if ((0 as any) == (1 as any)) {
-            Ball.setVelocity(65, -110)
-            Ball.follow(Hoop_Right, 100)
-            ball_following = true
-        }
+        Ball.setVelocity(65, -110)
+        Ball.follow(Hoop_Right, 100)
+        ball_following = true
     } else {
-        if ((0 as any) == (1 as any)) {
-            Ball.setVelocity(60 + randint(-40, 40), -100)
-        }
+        Ball.setVelocity(60 + randint(-40, 40), -100)
     }
     Ball_holder = 0
     Shooting = false
