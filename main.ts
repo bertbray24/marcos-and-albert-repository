@@ -12,15 +12,13 @@ function Launch_Shot (PlayerNum: number) {
     } else {
         if (PlayerNum == 1) {
             Ball.setVelocity(60 + randint(-40, 40), -100)
-        } else {
-            Ball.setVelocity(-60 + randint(-40, 40), -100)
         }
     }
     Ball_holder = 0
     Shooting = false
 }
-function Award_Points (playernum: number, points: number) {
-    Player1score = Player1score + points
+function Award_Points (points: number) {
+    Player1score = 0
     info.player1.setScore(Player1score)
     music.play(music.melodyPlayable(music.powerUp), music.PlaybackMode.InBackground)
 }
@@ -31,8 +29,8 @@ function Distance (spriteA: Sprite, SpriteB: Sprite) {
 }
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.UI, function (sprite, otherSprite) {
     if (otherSprite == Hoop_Right && Ball_holder == 0) {
-        PTS = CalculatePoints(1)
-        Award_Points(1, PTS)
+        PTS = CalculatePoints()
+        Award_Points(PTS)
         Ball.setVelocity(0, 80)
         pause(300)
         if (PTS == 2) {
@@ -43,10 +41,8 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.UI, function (sprite, otherS
         Reset_Ball()
     }
 })
-function CalculatePoints (PlayerNum: number) {
-    if (PlayerNum == 1) {
-        distance = Math.abs(shot_x - 152)
-    }
+function CalculatePoints () {
+    distance = Math.abs(shot_x - 152)
     if (distance > 55) {
         return 2
     } else {
@@ -195,7 +191,6 @@ controller.player1.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Press
     }
 })
 function Set_up () {
-    jump_ball_active = false
     blocked = false
     Ball = sprites.create(img`
         . . . . f f f f f f . . . . . . 
@@ -253,7 +248,6 @@ function Set_up () {
     player1.setPosition(55, 90)
     Ball.setPosition(80, 90)
     Bounce_Offset = 0
-    Winner = 0
     PTS = 0
     distance = 0
     Dribble_step = 0
@@ -278,16 +272,6 @@ function Set_up () {
     1,
     0
     ]
-    Game_messages = [
-    " Swish!",
-    " Scores!",
-    " Blocked!",
-    " Miss!",
-    " Wins!",
-    " 3!!"
-    ]
-    Player_Names = [" Player 1", " Player 2"]
-    Hoop_x = [8, 152]
     info.player1.setScore(0)
     player1.ay = 250
     tiles.setCurrentTilemap(tilemap`level1`)
@@ -309,16 +293,11 @@ function Reset_Ball () {
     Player1jump = false
     blocked = false
 }
-let Hoop_x: number[] = []
-let Player_Names: string[] = []
-let Game_messages: string[] = []
 let Dribble: number[] = []
 let dribble_Timer = 0
 let Dribble_step = 0
-let Winner = 0
 let Bounce_Offset = 0
 let blocked = false
-let jump_ball_active = false
 let Player1jump = false
 let Marker_Direction = 0
 let Marker: Sprite = null
@@ -474,6 +453,7 @@ game.splash("Arrow keys to move | M = Pickup/Shoot | P = Jump/Block")
 game.splash("Stop the marker in the GREEN zone to score! Miss = random shot")
 Set_up()
 game.onUpdate(function () {
+    let jump_ball_active = false
     if (Shooting == true) {
         Marker_position = Marker_position + Marker_Direction * 4
         if (Marker_position >= 100) {
@@ -525,12 +505,5 @@ game.onUpdate(function () {
         blocked = true
         Ball.setVelocity(randint(-70, 70), randint(-90, -40))
         player1.sayText("BLOCKED!", 1500, false)
-    }
-    if (Winner == 0) {
-        Winner = 0
-    }
-    if (Winner != 0) {
-        game.splash("" + Player_Names[Winner - 1] + " WINS!!")
-        game.gameOver(true)
     }
 })
