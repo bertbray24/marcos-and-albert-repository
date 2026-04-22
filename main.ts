@@ -57,9 +57,9 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.UI, function (sprite, otherS
 function CalculatePoints () {
     distance = Math.abs(shot_x - 152)
     if (distance > 55) {
-        return 2
+        return 3
     } else {
-        return 1
+        return 2
     }
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, otherSprite) {
@@ -285,9 +285,7 @@ function Reset_Ball () {
     player1.setPosition(55, 90)
     player1.setVelocity(0, 0)
     Player1jump = false
-    blocked = false
 }
-let blocked = false
 let Dribble: number[] = []
 let dribble_Timer = 0
 let Dribble_step = 0
@@ -434,7 +432,7 @@ scene.setBackgroundImage(img`
     ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     `)
 game.splash("BASKETBALL - Get as many points as you can in 30 seconds")
-game.splash("Arrow keys to move | M = Pickup/Shoot | P = Jump/Block")
+game.splash("Arrow keys to move | A = Pickup/Shoot | B = Jump/Block")
 game.splash("Stop the marker in the GREEN zone to score! Miss = random shot")
 Set_up()
 game.onUpdate(function () {
