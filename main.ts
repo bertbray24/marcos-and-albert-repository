@@ -42,10 +42,11 @@ function Distance (spriteA: Sprite, SpriteB: Sprite) {
 }
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.UI, function (sprite, otherSprite) {
     if (otherSprite == Hoop_Right && Ball_holder == 0) {
-        Award_Points(CalculatePoints())
+        PTS = CalculatePoints()
+        Award_Points(PTS)
         Ball.setVelocity(0, 80)
         pause(300)
-        if (PTS == 2) {
+        if (PTS == 3) {
             player1.sayText("3-POINTER!!", 1500, false)
         } else {
             player1.sayText("Scores!!!", 1500, false)
