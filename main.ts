@@ -190,7 +190,6 @@ controller.player1.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Press
     }
 })
 function Set_up () {
-    blocked = false
     Ball = sprites.create(img`
         . . . . f f f f f f . . . . . . 
         . . f f 6 6 6 f 6 6 f f . . . . 
@@ -292,11 +291,11 @@ function Reset_Ball () {
     Player1jump = false
     blocked = false
 }
+let blocked = false
 let Dribble: number[] = []
 let dribble_Timer = 0
 let Dribble_step = 0
 let Bounce_Offset = 0
-let blocked = false
 let Player1jump = false
 let distance = 0
 let PTS = 0
