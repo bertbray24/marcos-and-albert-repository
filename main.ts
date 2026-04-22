@@ -297,6 +297,7 @@ let distance = 0
 let PTS = 0
 let dy = 0
 let dx = 0
+let player1: Sprite = null
 let shot_x = 0
 let Marker: Sprite = null
 let Green_Bar: Sprite = null
@@ -310,7 +311,6 @@ let Ball: Sprite = null
 let Green_zone_max = 0
 let Green_zone_min = 0
 let Marker_position = 0
-let player1: Sprite = null
 scene.setBackgroundImage(img`
     cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
     cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -433,7 +433,6 @@ scene.setBackgroundImage(img`
     444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444ffffffff44444444444444444444444444444444444444
     ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     `)
-controller.moveSprite(player1)
 game.splash("BASKETBALL - Get as many points as you can in 30 seconds")
 game.splash("Arrow keys to move | M = Pickup/Shoot | P = Jump/Block")
 game.splash("Stop the marker in the GREEN zone to score! Miss = random shot")
