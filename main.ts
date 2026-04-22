@@ -21,6 +21,24 @@ function Award_Points (points: number) {
     info.setScore(Player1score)
     music.play(music.melodyPlayable(music.powerUp), music.PlaybackMode.InBackground)
 }
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (Ball_holder == 1 && Shooting == false) {
+        Shooting = true
+        Marker_position = 0
+        Marker_Direction = 1
+        Green_Bar.setFlag(SpriteFlag.Invisible, false)
+        Marker.setFlag(SpriteFlag.Invisible, false)
+    } else if (Ball_holder == 1 && Shooting == true) {
+        shot_x = player1.x
+        Launch_Shot(1)
+        Green_Bar.setFlag(SpriteFlag.Invisible, true)
+        Marker.setFlag(SpriteFlag.Invisible, true)
+    } else if (Ball_holder == 0) {
+        if (Distance(player1, Ball) < 25) {
+            Ball_holder = 1
+        }
+    }
+})
 function Distance (spriteA: Sprite, SpriteB: Sprite) {
     dx = spriteA.x - SpriteB.x
     dy = spriteA.y - SpriteB.y
@@ -165,24 +183,6 @@ function Green_Bar2 () {
     Hoop_Right.setPosition(143, 74)
     Hoop_Right.setFlag(SpriteFlag.Invisible, true)
 }
-controller.player1.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Pressed, function () {
-    if (Ball_holder == 1 && Shooting == false) {
-        Shooting = true
-        Marker_position = 0
-        Marker_Direction = 1
-        Green_Bar.setFlag(SpriteFlag.Invisible, false)
-        Marker.setFlag(SpriteFlag.Invisible, false)
-    } else if (Ball_holder == 1 && Shooting == true) {
-        shot_x = player1.x
-        Launch_Shot(1)
-        Green_Bar.setFlag(SpriteFlag.Invisible, true)
-        Marker.setFlag(SpriteFlag.Invisible, true)
-    } else if (Ball_holder == 0) {
-        if (Distance(player1, Ball) < 25) {
-            Ball_holder = 1
-        }
-    }
-})
 controller.player1.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Pressed, function () {
     if (Player1jump == false) {
         Player1jump = true
@@ -272,8 +272,8 @@ function Set_up () {
     0
     ]
     player1.ay = 250
-    tiles.setCurrentTilemap(tilemap`level1`)
     info.setScore(0)
+    info.startCountdown(30)
     player1.setStayInScreen(true)
     Green_Bar2()
 }
@@ -298,14 +298,14 @@ let Dribble_step = 0
 let Bounce_Offset = 0
 let blocked = false
 let Player1jump = false
-let Marker_Direction = 0
-let Marker: Sprite = null
-let Green_Bar: Sprite = null
-let shot_x = 0
 let distance = 0
 let PTS = 0
 let dy = 0
 let dx = 0
+let shot_x = 0
+let Marker: Sprite = null
+let Green_Bar: Sprite = null
+let Marker_Direction = 0
 let Player1score = 0
 let Shooting = false
 let Ball_holder = 0
@@ -444,7 +444,6 @@ game.splash("Arrow keys to move | M = Pickup/Shoot | P = Jump/Block")
 game.splash("Stop the marker in the GREEN zone to score! Miss = random shot")
 Set_up()
 game.onUpdate(function () {
-    let jump_ball_active = false
     if (Shooting == true) {
         Marker_position = Marker_position + Marker_Direction * 4
         if (Marker_position >= 100) {
@@ -489,12 +488,5 @@ game.onUpdate(function () {
         player1.y = 90
         player1.vy = 0
         Player1jump = false
-    }
-    if (Player1jump == true && (blocked == false && (Distance(player1, Ball) < 22 && (Ball_holder == 0 || ball_following == true))) && (Math.abs(Ball.vx) > 20 || Math.abs(Ball.vy) > 20) && jump_ball_active == false) {
-        Ball.unfollow()
-        ball_following = false
-        blocked = true
-        Ball.setVelocity(randint(-70, 70), randint(-90, -40))
-        player1.sayText("BLOCKED!", 1500, false)
     }
 })
