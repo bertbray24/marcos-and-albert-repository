@@ -282,9 +282,6 @@ function Reset_Ball () {
     Marker_position = 0
     Green_Bar.setFlag(SpriteFlag.Invisible, true)
     Marker.setFlag(SpriteFlag.Invisible, true)
-    player1.setPosition(55, 90)
-    player1.setVelocity(0, 0)
-    Player1jump = false
 }
 let Dribble: number[] = []
 let dribble_Timer = 0
@@ -455,9 +452,7 @@ game.onUpdate(function () {
             Dribble_step = (Dribble_step + 1) % 8
         }
         Bounce_Offset = Dribble[Dribble_step]
-        if (Ball_holder == 1) {
-            Ball.setPosition(player1.x + 8, player1.y + Bounce_Offset)
-        }
+        Ball.setPosition(player1.x + 8, player1.y + Bounce_Offset)
         Ball.setVelocity(0, 0)
     }
     if (Ball_holder == 0 && ball_following == false) {
