@@ -1,7 +1,6 @@
 namespace SpriteKind {
     export const UI = SpriteKind.create()
 }
-// This Is our unit 5 project. Functions with parameters and return values are used in Launch_Shot, CalculatePoints, Award_Points, and Distance, each taking inputs and returning or producing results based on those values. Conditional statements and boolean operators appear in the blocking mechanic and shooting state system using if and else if chains combined with and and or logic. User input is handled through the Keybinds extension which remaps keyboard controls so both players can play simultaneously on the same keyboard. The game update loop iterates every frame handling ball physics, dribble animation, and win checking. Arrays store dribble offsets, player names, and game messages that are accessed by index throughout the game. Two players compete with independent scores tracked and displayed through the Info extension. A tile map loads the court and defines the play area boundaries. The Info extension serves as the existing extension for live score display on screen, while the custom Keybinds extension by Brohann3214 is the user-added extension that solves MakeCode's default single-player input limitation and enables true simultaneous two-player keyboard gameplay.
 function Launch_Shot (PlayerNum: number) {
     if (Marker_position >= Green_zone_min && Marker_position <= Green_zone_max) {
         if (PlayerNum == 1) {
@@ -304,7 +303,6 @@ let Marker: Sprite = null
 let Green_Bar: Sprite = null
 let shot_x = 0
 let distance = 0
-let player1: Sprite = null
 let PTS = 0
 let dy = 0
 let dx = 0
@@ -317,6 +315,7 @@ let Ball: Sprite = null
 let Green_zone_max = 0
 let Green_zone_min = 0
 let Marker_position = 0
+let player1: Sprite = null
 scene.setBackgroundImage(img`
     cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
     cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -439,15 +438,7 @@ scene.setBackgroundImage(img`
     444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444ffffffff44444444444444444444444444444444444444
     ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     `)
-Keybinds.setSimulatorKeymap(
-Keybinds.PlayerNumber.ONE,
-Keybinds.CustomKey.UP,
-Keybinds.CustomKey.DOWN,
-Keybinds.CustomKey.LEFT,
-Keybinds.CustomKey.RIGHT,
-Keybinds.CustomKey.M,
-Keybinds.CustomKey.P
-)
+controller.moveSprite(player1)
 game.splash("BASKETBALL - Get as many points as you can in 30 seconds")
 game.splash("Arrow keys to move | M = Pickup/Shoot | P = Jump/Block")
 game.splash("Stop the marker in the GREEN zone to score! Miss = random shot")
