@@ -1,15 +1,15 @@
 namespace SpriteKind {
     export const UI = SpriteKind.create()
 }
-function Launch_Shot (PlayerNum: number) {
+function Launch_Shot () {
     if (Marker_position >= Green_zone_min && Marker_position <= Green_zone_max) {
-        if (PlayerNum == 1) {
+        if ((0 as any) == (1 as any)) {
             Ball.setVelocity(65, -110)
             Ball.follow(Hoop_Right, 100)
             ball_following = true
         }
     } else {
-        if (PlayerNum == 1) {
+        if ((0 as any) == (1 as any)) {
             Ball.setVelocity(60 + randint(-40, 40), -100)
         }
     }
@@ -30,7 +30,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         Marker.setFlag(SpriteFlag.Invisible, false)
     } else if (Ball_holder == 1 && Shooting == true) {
         shot_x = player1.x
-        Launch_Shot(1)
+        Launch_Shot()
         Green_Bar.setFlag(SpriteFlag.Invisible, true)
         Marker.setFlag(SpriteFlag.Invisible, true)
     } else if (Ball_holder == 0) {
