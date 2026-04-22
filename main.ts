@@ -429,7 +429,7 @@ scene.setBackgroundImage(img`
     ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     `)
 game.splash("BASKETBALL - Get as many points as you can in 30 seconds")
-game.splash("Arrow keys to move | A = Pickup/Shoot | B = Jump/Block")
+game.splash("Arrow keys to move | A = Pickup/Shoot | B = Jump")
 game.splash("Stop the marker in the GREEN zone to score! Miss = random shot")
 Set_up()
 game.onUpdate(function () {
