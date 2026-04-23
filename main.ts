@@ -279,6 +279,7 @@ function Set_up () {
         `, SpriteKind.Player)
     controller.player1.moveSprite(player1, 100, 0)
     player1.setPosition(55, 90)
+    Ball.ay = 300
     Ball.setPosition(80, 90)
     Bounce_Offset = 0
     PTS = 0
@@ -495,7 +496,6 @@ game.onUpdate(function () {
         Ball.setVelocity(0, 0)
     }
     if (Ball_holder == 0 && ball_following == false) {
-        Ball.vy = Ball.vy + 3
         if (Ball.y > 93) {
             Ball.y = 93
             Ball.vy = Ball.vy * -0.45
