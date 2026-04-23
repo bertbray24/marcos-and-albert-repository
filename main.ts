@@ -32,6 +32,9 @@ namespace SpriteKind {
  * This function takes the distance between the x's and y's and uses a distance formula based on the Pythagorean Theorem to show the spacing between 2 sprites
  */
 /**
+ * asytgjaytguy
+ */
+/**
  * This function determines the amount of points based on the distance of the shot.
  */
 /**
