@@ -7,6 +7,11 @@ function Launch_Shot (Power: number) {
     for (let index = 0; index < 3; index++) {
         Adjustment = Adjustment + Power / 12
     }
+    if (Power > 80) {
+        Adjustment = Adjustment + 10
+    } else if (Power < 40) {
+        Adjustment = Adjustment - 20
+    }
     if (Marker_position >= Green_zone_min && Marker_position <= Green_zone_max) {
         Ball.setVelocity(75 + Adjustment, -190)
     } else {
@@ -260,8 +265,8 @@ function Set_up () {
     Dribble_step = 0
     dribble_Timer = 0
     Player1jump = false
-    Green_zone_min = 35
-    Green_zone_max = 65
+    Green_zone_min = 30
+    Green_zone_max = 70
     Marker_Direction = 1
     Marker_position = 0
     Shooting = false
@@ -452,7 +457,7 @@ Set_up()
 // This "on game update" part of code, includes the shot meters frame and the visuals of the moving bar. The code includes the dribble animations where the Ball Holder = 1, a dribble timer counts, which resets and advances a list based offset. It also includes ball physics, where if the ball is in the air, gravity pulls it down by increasing vy. If the ball hits the floor, it bounces by reversing and reducing vy, also if the ball hits the left/ right walls, vx reverses.
 game.onUpdate(function () {
     if (Shooting == true) {
-        Marker_position = Marker_position + Marker_Direction * 4
+        Marker_position = Marker_position + Marker_Direction * 3
         if (Marker_position >= 100) {
             Marker_position = 100
             Marker_Direction = -1
@@ -461,7 +466,7 @@ game.onUpdate(function () {
             Marker_position = 0
             Marker_Direction = 1
         }
-        Marker.x = 57 + Marker_position * 45 / 100
+        Marker.x = 57 + Marker_position / 100 * 45
     }
     if (Ball_holder == 1) {
         dribble_Timer = dribble_Timer + 1
