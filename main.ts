@@ -7,15 +7,15 @@ function Launch_Shot (Power: number) {
     for (let index = 0; index < 3; index++) {
         Adjustment = Adjustment + Power / 12
     }
-    if (Power > 80) {
-        Adjustment = Adjustment + 10
-    } else if (Power < 40) {
+    if (Power > 90) {
+        Adjustment = Adjustment + 45
+    } else if (Power < 30) {
         Adjustment = Adjustment - 20
     }
     if (Marker_position >= Green_zone_min && Marker_position <= Green_zone_max) {
-        Ball.setVelocity(75 + Adjustment, -190)
+        Ball.setVelocity(Adjustment + 40, -190)
     } else {
-        Ball.setVelocity(randint(40, 60), -160)
+        Ball.setVelocity(randint(-30, 30), -160)
     }
     Ball_holder = 0
     Shooting = false
@@ -36,6 +36,8 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         Marker.setFlag(SpriteFlag.Invisible, false)
     } else if (Ball_holder == 1 && Shooting == true) {
         shot_x = player1.x
+        Ball_holder = 0
+        pause(20)
         Launch_Shot(Distance(player1, Hoop_Right))
         Green_Bar.setFlag(SpriteFlag.Invisible, true)
         Marker.setFlag(SpriteFlag.Invisible, true)
@@ -69,7 +71,7 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.UI, function (sprite, otherS
 // This function determines the amount of points based on the distance of the shot.
 function CalculatePoints () {
     distance = Math.abs(shot_x - 152)
-    if (distance > 55) {
+    if (distance > 65) {
         return 3
     } else {
         return 2
