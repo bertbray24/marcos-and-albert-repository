@@ -2,20 +2,22 @@ namespace SpriteKind {
     export const UI = SpriteKind.create()
 }
 // This function allows the player to time their shot with a meter. If they time it right, the ball will follow the hoop, which would make it go in. If they don't time it right, the ball picks a random velocity and position.
-// 
-function Launch_Shot () {
+function Launch_Shot (Power: number) {
+    Adjustment = 0
+    for (let index = 0; index < 3; index++) {
+        Adjustment += randint(0 - Power, Power)
+    }
     if (Marker_position >= Green_zone_min && Marker_position <= Green_zone_max) {
-        Ball.setVelocity(65, -110)
+        Ball.setVelocity(65 + Adjustment, -110)
         Ball.follow(Hoop_Right, 100)
         ball_following = true
     } else {
-        Ball.setVelocity(60 + randint(-40, 40), -100)
+        Ball.setVelocity(60 + Adjustment, -100)
     }
     Ball_holder = 0
     Shooting = false
 }
 // This function allows the player to be awarded points if they make the shot. If they do, a sound plays!
-// 
 function Award_Points (points: number) {
     Player1score = Player1score + points
     info.setScore(Player1score)
@@ -31,7 +33,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         Marker.setFlag(SpriteFlag.Invisible, false)
     } else if (Ball_holder == 1 && Shooting == true) {
         shot_x = player1.x
-        Launch_Shot()
+        Launch_Shot(40)
         Green_Bar.setFlag(SpriteFlag.Invisible, true)
         Marker.setFlag(SpriteFlag.Invisible, true)
     } else if (Ball_holder == 0) {
@@ -41,14 +43,12 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     }
 })
 // This function takes the distance between the x's and y's and uses a distance formula based on the Pythagorean Theorem to show the spacing between 2 sprites
-// 
 function Distance (spriteA: Sprite, SpriteB: Sprite) {
     dx = spriteA.x - SpriteB.x
     dy = spriteA.y - SpriteB.y
     return Math.sqrt(dx * dx + dy * dy)
 }
 // This code allows the ball to go through the hoop, calculate the points, and reset for the next possession. It does this when you launch the ball, and it overlaps the hoop, it calls "calculate points" and calls "Award points." Afterwards, the player will say either "3 - Pointer" or "Scores" depending on the shot distance. After all of this, it is called "reset ball."
-// 
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.UI, function (sprite, otherSprite) {
     if (otherSprite == Hoop_Right && Ball_holder == 0) {
         PTS = CalculatePoints()
@@ -64,7 +64,6 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.UI, function (sprite, otherS
     }
 })
 // This function determines the amount of points based on the distance of the shot.
-// 
 function CalculatePoints () {
     distance = Math.abs(shot_x - 152)
     if (distance > 55) {
@@ -200,7 +199,6 @@ controller.player1.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Press
     }
 })
 // This function shows the setup, which includes the player starting position, the ball position, the dribble as an array, and the 30 secs the player has to make shots.
-// 
 function Set_up () {
     Ball = sprites.create(img`
         . . . . f f f f f f . . . . . . 
@@ -326,6 +324,7 @@ let Ball: Sprite = null
 let Green_zone_max = 0
 let Green_zone_min = 0
 let Marker_position = 0
+let Adjustment = 0
 scene.setBackgroundImage(img`
     cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
     cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
