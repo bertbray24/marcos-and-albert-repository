@@ -5,12 +5,12 @@ namespace SpriteKind {
 function Launch_Shot (Power: number) {
     Adjustment = 0
     for (let index = 0; index < 3; index++) {
-        Adjustment += randint((0 - Power) / 3, Power / 3)
+        Adjustment = Adjustment + Power / 12
     }
     if (Marker_position >= Green_zone_min && Marker_position <= Green_zone_max) {
-        Ball.setVelocity(75 + Adjustment, -200)
+        Ball.setVelocity(75 + Adjustment, -190)
     } else {
-        Ball.setVelocity(60 + Adjustment, -160)
+        Ball.setVelocity(randint(40, 60), -160)
     }
     Ball_holder = 0
     Shooting = false
