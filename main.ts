@@ -2,22 +2,10 @@ namespace SpriteKind {
     export const UI = SpriteKind.create()
 }
 /**
- * This "On Start" code explains how the game works and provides the player details on what to do.
- */
-/**
- * This part of code allows the player to be able to jump in the beginning and when the ball is reset.
- */
-/**
  * This code allows the ball to go through the hoop, calculate the points, and reset for the next possession. It does this when you launch the ball, and it overlaps the hoop, it calls "calculate points" and calls "Award points." Afterwards, the player will say either "3 - Pointer" or "Scores" depending on the shot distance. After all of this, it is called "reset ball."
  */
 /**
- * This code prevents the player from grabbing the ball mid - air while its shot. The ball has to be almost completely still to be picked up.
- */
-/**
  * This function allows the player to time their shot with a meter. If they time it right, the ball will follow the hoop, which would make it go in. If they don't time it right, the ball picks a random velocity and position.
- */
-/**
- * This function allows the player to be awarded points if they make the shot. If they do, a sound plays!
  */
 /**
  * This function shows the setup, which includes the player starting position, the ball position, the dribble as an array, and the 30 secs the player has to make shots.
@@ -31,7 +19,6 @@ namespace SpriteKind {
 /**
  * This function determines the amount of points based on the distance of the shot.
  */
-// This function allows the ball to be reset when a shot is made. this includes the position, resets, and detaches the ball from any sprite it was following.
 function Launch_Shot () {
     if (Marker_position >= Green_zone_min && Marker_position <= Green_zone_max) {
         Ball.setVelocity(65, -110)
@@ -43,13 +30,14 @@ function Launch_Shot () {
     Ball_holder = 0
     Shooting = false
 }
+// This function allows the player to be awarded points if they make the shot. If they do, a sound plays!
+// 
 function Award_Points (points: number) {
     Player1score = Player1score + points
     info.setScore(Player1score)
     music.play(music.melodyPlayable(music.powerUp), music.PlaybackMode.InBackground)
 }
 // This code deals with the "A" button which does multiple things. If your near the ball, it picks it up, your first press starts the meter, and then the second press launches the shot
-// 
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (Ball_holder == 1 && Shooting == false) {
         Shooting = true
@@ -95,6 +83,7 @@ function CalculatePoints () {
         return 2
     }
 }
+// This code prevents the player from grabbing the ball mid - air while its shot. The ball has to be almost completely still to be picked up.
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, otherSprite) {
     if (Ball_holder == 0 && (Math.abs(Ball.vx) < 10 && (Math.abs(Ball.vy) < 10 && ball_following == false))) {
         if (sprite == player1) {
@@ -103,7 +92,6 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, ot
     }
 })
 // This function shows the "Bar Sprite" to time the shot, including the position and speed.
-// 
 function Green_Bar2 () {
     Green_Bar = sprites.create(img`
         ................................................................
@@ -214,6 +202,7 @@ function Green_Bar2 () {
     Hoop_Right.setPosition(143, 74)
     Hoop_Right.setFlag(SpriteFlag.Invisible, true)
 }
+// This part of code allows the player to be able to jump in the beginning and when the ball is reset.
 controller.player1.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Pressed, function () {
     if (Player1jump == false) {
         Player1jump = true
@@ -309,6 +298,7 @@ function Set_up () {
     player1.setStayInScreen(true)
     Green_Bar2()
 }
+// This function allows the ball to be reset when a shot is made. this includes the position, resets, and detaches the ball from any sprite it was following.
 function Reset_Ball () {
     Ball.unfollow()
     ball_following = false
@@ -320,6 +310,7 @@ function Reset_Ball () {
     Green_Bar.setFlag(SpriteFlag.Invisible, true)
     Marker.setFlag(SpriteFlag.Invisible, true)
 }
+// This "On Start" code explains how the game works and provides the player details on what to do.
 let Dribble: number[] = []
 let dribble_Timer = 0
 let Dribble_step = 0
@@ -470,7 +461,6 @@ game.splash("Arrow keys to move | A = Pickup/Shoot | B = Jump")
 game.splash("Stop the marker in the GREEN zone to score! Miss = random shot")
 Set_up()
 // This "on game update" part of code, includes the shot meters frame and the visuals of the moving bar. The code includes the dribble animations where the Ball Holder = 1, a dribble timer counts, which resets and advances a list based offset. It also includes ball physics, where if the ball is in the air, gravity pulls it down by increasing vy. If the ball hits the floor, it bounces by reversing and reducing vy, also if the ball hits the left/ right walls, vx reverses.
-// 
 game.onUpdate(function () {
     if (Shooting == true) {
         Marker_position = Marker_position + Marker_Direction * 4
