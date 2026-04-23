@@ -8,9 +8,7 @@ function Launch_Shot (Power: number) {
         Adjustment += randint(0 - Power, Power)
     }
     if (Marker_position >= Green_zone_min && Marker_position <= Green_zone_max) {
-        Ball.setVelocity(65 + Adjustment, -110)
-        Ball.follow(Hoop_Right, 100)
-        ball_following = true
+        Ball.setVelocity(80 + Adjustment, -210)
     } else {
         Ball.setVelocity(60 + Adjustment, -100)
     }
@@ -306,8 +304,10 @@ let dribble_Timer = 0
 let Dribble_step = 0
 let Bounce_Offset = 0
 let Player1jump = false
+let ball_following = false
 let distance = 0
 let PTS = 0
+let Hoop_Right: Sprite = null
 let dy = 0
 let dx = 0
 let player1: Sprite = null
@@ -318,8 +318,6 @@ let Marker_Direction = 0
 let Player1score = 0
 let Shooting = false
 let Ball_holder = 0
-let ball_following = false
-let Hoop_Right: Sprite = null
 let Ball: Sprite = null
 let Green_zone_max = 0
 let Green_zone_min = 0
