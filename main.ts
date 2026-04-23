@@ -2,6 +2,9 @@ namespace SpriteKind {
     export const UI = SpriteKind.create()
 }
 /**
+ * This "On Start" code explains how the game works and provides the player details on what to do.
+ */
+/**
  * This part of code allows the player to be able to jump in the beginning and when the ball is reset.
  */
 /**
@@ -14,9 +17,6 @@ namespace SpriteKind {
  * This code prevents the player from grabbing the ball mid - air while its shot. The ball has to be almost completely still to be picked up.
  */
 /**
- * This "On Start" code explains how the game works and provides the player details on what to do.
- */
-/**
  * This "on game update" part of code, includes the shot meters frame and the visuals of the moving bar. The code includes the dribble animations where the Ball Holder = 1, a dribble timer counts, which resets and advances a list based offset. It also includes ball physics, where if the ball is in the air, gravity pulls it down by increasing vy. If the ball hits the floor, it bounces by reversing and reducing vy, also if the ball hits the left/ right walls, vx reverses.
  */
 /**
@@ -24,6 +24,9 @@ namespace SpriteKind {
  */
 /**
  * This function allows the player to be awarded points if they make the shot. If they do, a sound plays!
+ */
+/**
+ * This function shows the "Bar Sprite" to time the shot, including the position and speed.
  */
 /**
  * This function shows the setup, which includes the player starting position, the ball position, the dribble as an array, and the 30 secs the player has to make shots.
@@ -36,9 +39,6 @@ namespace SpriteKind {
  */
 /**
  * This function determines the amount of points based on the distance of the shot.
- */
-/**
- * This function shows the "Bar Sprite" to time the shot, including the position and speed.
  */
 // This function allows the ball to be reset when a shot is made. this includes the position, resets, and detaches the ball from any sprite it was following.
 function Launch_Shot () {
@@ -297,6 +297,7 @@ function Set_up () {
     Player1score = 0
     ball_following = false
     shot_x = 0
+    // This list manages complexity by storing multiple animation states so the program and cycle through them quickly without having to code frame by frame.
     Dribble = [
     1,
     3,
