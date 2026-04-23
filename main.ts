@@ -1,7 +1,7 @@
 namespace SpriteKind {
     export const UI = SpriteKind.create()
 }
-// This function allows the player to time their shot with a meter. If they time it right, the ball will follow the hoop, which would make it go in. If they don't time it right, the ball picks a random velocity and position.
+// This function allows the player to time their shot with a meter. If they time it right, the ball will follow the hoop, which would make it go in. If they don't time it right it misses. It uses the shot power parameter, calculates shot velocity. Power affects Adjustment through the loop  and the conditional range checks.
 function Launch_Shot (Power: number) {
     Adjustment = 0
     for (let index = 0; index < 3; index++) {
