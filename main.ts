@@ -5,12 +5,12 @@ namespace SpriteKind {
 function Launch_Shot (Power: number) {
     Adjustment = 0
     for (let index = 0; index < 3; index++) {
-        Adjustment += randint(0 - Power, Power)
+        Adjustment += randint((0 - Power) / 3, Power / 3)
     }
     if (Marker_position >= Green_zone_min && Marker_position <= Green_zone_max) {
-        Ball.setVelocity(80 + Adjustment, -210)
+        Ball.setVelocity(75 + Adjustment, -200)
     } else {
-        Ball.setVelocity(60 + Adjustment, -100)
+        Ball.setVelocity(60 + Adjustment, -160)
     }
     Ball_holder = 0
     Shooting = false
@@ -31,7 +31,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         Marker.setFlag(SpriteFlag.Invisible, false)
     } else if (Ball_holder == 1 && Shooting == true) {
         shot_x = player1.x
-        Launch_Shot(40)
+        Launch_Shot(Distance(player1, Hoop_Right))
         Green_Bar.setFlag(SpriteFlag.Invisible, true)
         Marker.setFlag(SpriteFlag.Invisible, true)
     } else if (Ball_holder == 0) {
@@ -307,9 +307,9 @@ let Player1jump = false
 let ball_following = false
 let distance = 0
 let PTS = 0
-let Hoop_Right: Sprite = null
 let dy = 0
 let dx = 0
+let Hoop_Right: Sprite = null
 let player1: Sprite = null
 let shot_x = 0
 let Marker: Sprite = null
@@ -474,8 +474,8 @@ game.onUpdate(function () {
         Ball.setVelocity(0, 0)
     }
     if (Ball_holder == 0 && ball_following == false) {
-        if (Ball.y > 93) {
-            Ball.y = 93
+        if (Ball.y > 115) {
+            Ball.y = 115
             Ball.vy = Ball.vy * -0.45
             Ball.vx = Ball.vx * 0.75
         }
