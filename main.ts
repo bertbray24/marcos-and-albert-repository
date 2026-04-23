@@ -26,6 +26,9 @@ namespace SpriteKind {
  * This function allows the player to be awarded points if they make the shot. If they do, a sound plays!
  */
 /**
+ * This function shows the setup, which includes the player starting position, the ball position, the dribble as an array, and the 30 secs the player has to make shots.
+ */
+/**
  * This function takes the distance between the x's and y's and uses a distance formula based on the Pythagorean Theorem to show the spacing between 2 sprites
  */
 /**
@@ -34,12 +37,7 @@ namespace SpriteKind {
 /**
  * This function shows the "Bar Sprite" to time the shot, including the position and speed.
  */
-/**
- * This function shows the setup, which includes the player starting position, the ball position, the dribble as an array, and the 30 secs the player has to make shots.
- */
-/**
- * This function allows the ball to be reset when a shot is made. this includes the position, resets, and detaches the ball from any sprite it was following.
- */
+// This function allows the ball to be reset when a shot is made. this includes the position, resets, and detaches the ball from any sprite it was following.
 function Launch_Shot () {
     if (Marker_position >= Green_zone_min && Marker_position <= Green_zone_max) {
         Ball.setVelocity(65, -110)
